@@ -7,10 +7,10 @@
     <style>
         :root {
             --bg-color: #0d0f14;
-            --panel-bg: #151821;
-            --card-bg: #1a1c24;
-            --inner-bg: #13161f;
-            --tarot-bg: #1a1e2b;
+            --panel-bg: rgba(21, 24, 33, 0.85);
+            --card-bg: rgba(26, 28, 36, 0.9);
+            --inner-bg: rgba(19, 22, 31, 0.9);
+            --tarot-bg: rgba(26, 30, 43, 0.9);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --accent: #4338ca;
@@ -20,16 +20,44 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; padding-bottom: 50px; }
+        
+        /* --- 背景與霧化設定 --- */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('daria-yakovleva-drink-6988494.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(8px) brightness(0.5);
+            transform: scale(1.1);
+            z-index: -999;
+        }
 
         .control-panel {
             background-color: var(--panel-bg);
+            backdrop-filter: blur(10px);
             padding: 16px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            border-bottom: 1px solid #222634;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             gap: 12px;
             text-align: center;
         }
@@ -50,7 +78,7 @@
         button:hover { background-color: var(--accent-hover); }
         select { background-color: #0d0f14; border: 1px solid #475569; color: #fff; }
         
-        .config-box { background: #1e2230; padding: 6px 10px; border-radius: 4px; border: 1px solid #33394d; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #38bdf8; flex-wrap: wrap; }
+        .config-box { background: rgba(30, 34, 48, 0.8); padding: 6px 10px; border-radius: 4px; border: 1px solid #33394d; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #38bdf8; flex-wrap: wrap; }
         input[type="number"] { width: 50px; background: #0d0f14; color: #fff; text-align: center; border: 1px solid #475569; padding: 4px; }
 
         .workspace { flex: 1; padding: 16px; display: flex; justify-content: center; overflow-y: auto; width: 100%; }
@@ -67,7 +95,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             margin: 0 auto;
         }
         .banner {
@@ -161,7 +189,7 @@
 <body>
 
     <div class="control-panel">
-        <div class="title">🔮 偉特塔羅 × 復古雷諾曼 占卜系統</div>
+        <div class="title">醉酒塔羅 🔮 偉特塔羅 × 復古雷諾曼 占卜系統</div>
         <div class="btn-group">
             <button onclick="drawTwoChoices()">⚖️ 二擇一牌陣</button>
             <button onclick="drawHolyTriangle()">🔺 聖三角牌陣</button>
@@ -186,7 +214,7 @@
         <div id="spreadArea" class="spread-container">
             <div style="color: var(--text-sub); margin-top: 100px; text-align: center; padding: 20px;">
                 ✨ 請點擊上方按鈕開始進行專業占卜 ✨<br><br>
-                (雷諾曼預設 0 張，不額外抽牌)
+                (背景霧化與品牌標誌已載入)
             </div>
         </div>
     </div>
@@ -220,7 +248,7 @@
             {no: 11, name: "正義", en: "Justice", theme: "靈性核心與大局走勢", upright: "公平正義、因果法則、客觀真相、明智裁決", reversed: "不公不義、偏見偏袒、逃避責任、法律糾紛", file: "RWS1909_-_11_Justice.jpeg"},
             {no: 12, name: "倒吊人", en: "The Hanged Man", theme: "靈性核心與大局走勢", upright: "換位思考、暫停放下、自我犧牲、獲得新視角", reversed: "無謂犧牲、停滯不前、抗拒放手、自怨自艾", file: "RWS1909_-_12_Hanged_Man.jpeg"},
             {no: 13, name: "死神", en: "Death", theme: "靈性核心與大局走勢", upright: "重大結束、必然轉化、掃除舊物、新階段開始", reversed: "抗拒改變、恐懼結束、痛苦拖延、停滯腐敗", file: "RWS1909_-_13_Death.jpeg"},
-            {no: 14, name: "節制", en: "Temperance", theme: "靈性核心與大局走勢", upright: "平衡調和, 耐心融合、適度自律、心靈療癒", reversed: "失衡失調、極端衝突、過度缺乏節制、急躁", file: "RWS1909_-_14_Temperance.jpeg"},
+            {no: 14, name: "節制", en: "Temperance", theme: "靈性核心與大局走勢", upright: "平衡調和、耐心融合、適度自律、心靈療癒", reversed: "失衡失調、極端衝突、過度缺乏節制、急躁", file: "RWS1909_-_14_Temperance.jpeg"},
             {no: 15, name: "惡魔", en: "The Devil", theme: "靈性核心與大局走勢", upright: "物質束縛、執念誘惑、成癮依賴、陰暗面", reversed: "擺脫枷鎖、重獲自由、覺醒突破、認清陷阱", file: "RWS1909_-_15_Devil.jpeg"},
             {no: 16, name: "高塔", en: "The Tower", theme: "靈性核心與大局走勢", upright: "突發劇變、體系崩塌、幻象破滅、震撼啟蒙", reversed: "恐懼改變、避免災難、勉強支撐、餘震未平", file: "RWS1909_-_16_Tower.jpeg"},
             {no: 17, name: "星星", en: "The Star", theme: "靈性核心與大局走勢", upright: "希望指引、靈感湧現、寧靜信心、心靈療癒", reversed: "絕望灰心、失去信念、悲觀消極、靈感枯竭", file: "RWS1909_-_17_Star.jpeg"},
@@ -412,7 +440,7 @@
             let lenoPool = shuffle(LENORMAND_DECK);
             let area = document.getElementById("spreadArea");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 (過去 ➔ 現在 ➔ 未來) 】</h2>';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 】</h2>';
             
             html += '<div class="branch-row">';
             html += '<div class="branch-col">' + createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第一張·過去起因】 事情源頭與歷史根基") + '</div>';
