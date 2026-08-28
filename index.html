@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>偉特塔羅 × 復古雷諾曼 專業占卜系統</title>
+    <title>偉特塔羅 × 復古雷諾曼 占卜系統</title>
     <style>
         :root {
             --bg-color: #0d0f14;
@@ -161,7 +161,7 @@
 <body>
 
     <div class="control-panel">
-        <div class="title">🔮 偉特塔羅 × 復古雷諾曼 專業占卜系統</div>
+        <div class="title">🔮 偉特塔羅 × 復古雷諾曼 占卜系統</div>
         <div class="btn-group">
             <button onclick="drawTwoChoices()">⚖️ 二擇一牌陣</button>
             <button onclick="drawHolyTriangle()">🔺 聖三角牌陣</button>
@@ -381,24 +381,24 @@
             let lenoPool = shuffle(LENORMAND_DECK);
             let area = document.getElementById("spreadArea");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 (上現下選) 】</h2>';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
             
             html += '<div style="margin-bottom:16px; width:100%; max-width:450px;">';
-            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【現狀核心】 當前處境與決策背景（頂端）");
+            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【現狀核心】 當前處境與決策背景");
             html += '</div>';
 
             html += '<div class="branch-row">';
             
             html += '<div class="branch-col">';
             html += '<div class="branch-title">── 選擇 A 路線 ──</div>';
-            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【選擇 A · 結果】 最終結局與走向");
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【選擇 A · 過程】 經歷狀態與挑戰");
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【選擇 A · 結果】 最終結局與走向");
             html += '</div>';
 
             html += '<div class="branch-col">';
             html += '<div class="branch-title">── 選擇 B 路線 ──</div>';
-            html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), "【選擇 B · 結果】 最終結局與走向");
             html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), "【選擇 B · 過程】 經歷狀態與挑戰");
+            html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), "【選擇 B · 結果】 最終結局與走向");
             html += '</div>';
 
             html += '</div>';
