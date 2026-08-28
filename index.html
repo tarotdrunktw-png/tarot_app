@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>偉特塔羅 × 復古雷諾曼 占卜系統</title>
+    <title>偉特塔羅 × 雷諾曼 占卜系統</title>
     <style>
         :root {
             --bg-color: #0d0f14;
@@ -20,7 +20,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; padding-bottom: 50px; }
 
         .control-panel {
             background-color: var(--panel-bg);
@@ -96,7 +96,6 @@
         .t-head { font-size: 12px; font-weight: bold; color: #a5b4fc; margin-bottom: 6px; }
         .t-body { display: flex; gap: 10px; flex: 1; align-items: center; }
         
-        /* 塔羅牌圖片基礎設定 */
         .card-img { 
             width: 70px; 
             height: 115px; 
@@ -107,7 +106,6 @@
             flex-shrink: 0; 
             transition: transform 0.3s ease;
         }
-        /* 逆位時自動上下顛倒 180 度 */
         .card-img.reversed-img {
             transform: rotate(180deg);
         }
@@ -136,12 +134,44 @@
         .modal-body { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; }
         .modal-card-item { background: #232736; border: 1px solid #2f364b; padding: 10px; border-radius: 6px; display: flex; gap: 12px; align-items: flex-start; }
         .modal-close-btn { margin-top: 12px; background: var(--accent); color: #fff; padding: 10px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; text-align: center; font-size: 14px; }
+
+        /* 右下角 LOGO 標籤樣式 */
+        .brand-footer {
+            position: fixed;
+            bottom: 12px;
+            right: 16px;
+            background: rgba(21, 24, 33, 0.9);
+            border: 1px solid #2f364b;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            z-index: 999;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        .brand-name {
+            font-weight: bold;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+        }
+        .brand-threads {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .brand-threads:hover {
+            color: #f8fafc;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
     <div class="control-panel">
-        <div class="title">🔮 偉特塔羅 × 復古雷諾曼 占卜系統</div>
+        <div class="title">🔮 偉特塔羅 × 雷諾曼 占卜系統</div>
         <div class="btn-group">
             <button onclick="drawTwoChoices()">⚖️ 二擇一牌陣</button>
             <button onclick="drawHolyTriangle()">🔺 聖三角牌陣</button>
@@ -161,8 +191,15 @@
         <div id="spreadArea" class="spread-container">
             <div style="color: var(--text-sub); margin-top: 100px; text-align: center; padding: 20px;">
                 ✨ 請點擊上方按鈕開始進行專業占卜 ✨<br><br>
+                (全域雷諾曼不重複防護已啟用)
             </div>
         </div>
+    </div>
+
+    <!-- 右下角 LOGO 與 Threads 帳號 -->
+    <div class="brand-footer">
+        <span class="brand-name">醉酒塔羅 - 李特</span>
+        <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -285,8 +322,6 @@
             let base = getBasePath();
             let imgPath = base + "rws1909/" + card.file;
             let badgeClass = card.isReversed ? "bg-rev" : "bg-up";
-            
-            // 核心修改：如果是逆位，加上 reversed-img 類別進行 180 度旋轉
             let imgClass = card.isReversed ? "card-img reversed-img" : "card-img";
             
             let lenoHtml = "";
@@ -346,14 +381,13 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
-        // 1. 二擇一牌陣：現狀核心置頂 (tCards[0])
         function drawTwoChoices() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 1;
             let tCards = getRandomTarot(5);
             let lenoPool = shuffle(LENORMAND_DECK);
             let area = document.getElementById("spreadArea");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 (上現下選) 】</h2>';
             
             html += '<div style="margin-bottom:16px; width:100%; max-width:450px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【現狀核心】 當前處境與決策背景（頂端）");
@@ -363,14 +397,14 @@
             
             html += '<div class="branch-col">';
             html += '<div class="branch-title">── 選擇 A 路線 ──</div>';
-            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【選擇 A · 過程】 經歷狀態與挑戰");
             html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【選擇 A · 結果】 最終結局與走向");
+            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【選擇 A · 過程】 經歷狀態與挑戰");
             html += '</div>';
 
             html += '<div class="branch-col">';
             html += '<div class="branch-title">── 選擇 B 路線 ──</div>';
-            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), "【選擇 B · 過程】 經歷狀態與挑戰");
             html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), "【選擇 B · 結果】 最終結局與走向");
+            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), "【選擇 B · 過程】 經歷狀態與挑戰");
             html += '</div>';
 
             html += '</div>';
@@ -378,14 +412,13 @@
             area.innerHTML = html;
         }
 
-        // 2. 聖三角牌陣：第一張過去、第二張現在、第三張未來
         function drawHolyTriangle() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 1;
             let tCards = getRandomTarot(3);
             let lenoPool = shuffle(LENORMAND_DECK);
             let area = document.getElementById("spreadArea");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 】</h2>';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 (過去 ➔ 現在 ➔ 未來) 】</h2>';
             
             html += '<div class="branch-row">';
             html += '<div class="branch-col">' + createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第一張·過去起因】 事情源頭與歷史根基") + '</div>';
@@ -396,7 +429,6 @@
             area.innerHTML = html;
         }
 
-        // 3. 無牌陣：直列式向下排列
         function drawFreeSpread() {
             let count = parseInt(document.getElementById("freeCount").value) || 3;
             let extCount = parseInt(document.getElementById("lenoCount").value) || 1;
