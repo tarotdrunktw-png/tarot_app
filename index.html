@@ -273,6 +273,7 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
+    <!-- 雲端全網同步計數器 -->
     <div class="visitor-counter">
         🍸 歡迎使用，您是第：<span id="visitorNum">載入中...</span> 位深夜酒客
     </div>
@@ -286,16 +287,22 @@
     </div>
 
     <script>
-        // 訪客計數器
+        // 使用免費雲端 API (CountAPI) 達成全網手機與電腦同步計數
         window.addEventListener('DOMContentLoaded', () => {
-            let count = localStorage.getItem('bar_visitor_count');
-            if (!count) {
-                count = 1042;
-            } else {
-                count = parseInt(count) + 1;
-            }
-            localStorage.setItem('bar_visitor_count', count);
-            document.getElementById('visitorNum').innerText = count;
+            // 使用你的 GitHub 專案名稱作為 namespace，確保數據獨立
+            const namespace = 'tarot_drunk_app';
+            const key = 'visitor_count';
+
+            // 透過 fetch 每次有人開啟網頁就將雲端數字 +1
+            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('visitorNum').innerText = data.value;
+                })
+                .catch(error => {
+                    // 若網路不通或 API 異常時的備用防護（顯示隨機或預設值）
+                    document.getElementById('visitorNum').innerText = "1042+";
+                });
         });
 
         // 切換牌陣時是否顯示自訂張數輸入框
