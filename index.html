@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>醉酒塔羅 - 占卜系統</title>
+    <!-- 網頁分頁圖標 (Favicon) 設定 -->
     <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
     <style>
         :root {
@@ -199,21 +200,19 @@
             color: #94a3b8;
             z-index: 998;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .visitor-counter span {
             color: #38bdf8;
             font-weight: bold;
         }
-
-        .welcome-box {
-            color: var(--text-sub);
-            margin-top: 80px;
-            text-align: center;
-            padding: 20px;
-            line-height: 1.8;
+        /* 隱藏外掛帶進來的多餘贊助商連結，保持版面簡潔 */
+        .visitor-counter a {
+            display: none;
         }
-        .welcome-box p { margin-bottom: 12px; }
-        .welcome-title { font-size: 16px; font-weight: bold; color: #e4e6eb; }
     </style>
 </head>
 <body>
@@ -268,8 +267,13 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
+    <!-- 全網同步外部計數器外掛 -->
     <div class="visitor-counter">
-        🍸 歡迎使用，您是第：<span id="visitorNum">1050</span> 位深夜酒客
+        🍸 歡迎使用，您是第：
+        <script type="text/javascript" src="https://freehitcounters.org/count/k5j7"></script>
+        位深夜酒客
+        <a href='https://www.pferdeversicherung.at/'>Pferd Versicherung Österreich</a> 
+        <script type='text/javascript' src='https://www.whomania.com/ctr?id=291e37edfc0b48c547a2c269703ef744efde0aa6'></script>
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -281,18 +285,6 @@
     </div>
 
     <script>
-        // 穩定流暢的計數防護：以 1050 為基準，在裝置內順暢累加，不再受外部 API 斷線影響
-        window.addEventListener('DOMContentLoaded', () => {
-            let count = localStorage.getItem('tarot_drunk_counter');
-            if (!count) {
-                count = 1050;
-            } else {
-                count = parseInt(count) + 1;
-            }
-            localStorage.setItem('tarot_drunk_counter', count);
-            document.getElementById('visitorNum').innerText = count;
-        });
-
         function toggleSpreadConfig() {
             let spreadVal = document.getElementById("spreadSelect").value;
             let freeBox = document.getElementById("freeConfigBox");
