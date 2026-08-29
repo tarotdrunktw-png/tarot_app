@@ -63,7 +63,6 @@
         }
         .title { font-size: 15px; font-weight: bold; color: #e4e6eb; width: 100%; }
         
-        /* 手機版強制單行完美縮放配置 */
         .control-row { 
             display: flex; 
             align-items: center; 
@@ -88,7 +87,6 @@
         }
         button:hover { background-color: var(--accent-hover); }
         
-        /* 統一選單樣式，確保高度與外框和張數按鈕一致 */
         select { 
             background-color: #0d0f14; 
             border: 1px solid #475569; 
@@ -117,12 +115,21 @@
             cursor: pointer;
         }
 
-        .workspace { flex: 1; padding: 16px; display: flex; justify-content: center; align-items: center; overflow-y: auto; width: 100%; }
+        /* 修改此處：將 align-items 改為 flex-start，讓內容靠上置中，並加上適當上邊距 */
+        .workspace { 
+            flex: 1; 
+            padding: 20px 16px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            overflow-y: auto; 
+            width: 100%; 
+        }
         .spread-container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
 
         .welcome-box {
             text-align: center;
-            padding: 40px 20px;
+            padding: 20px 20px;
             width: 100%;
             max-width: 600px;
         }
@@ -257,7 +264,6 @@
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
 
-        /* 畫面下方獨立的置中橫向計數器欄位 */
         .visitor-counter-bar {
             position: fixed;
             bottom: 0;
@@ -292,7 +298,6 @@
                 </select>
             </div>
 
-            <!-- 預設隱藏，唯有選到「自訂/無牌陣」時才會顯示 -->
             <div class="config-box" id="freeConfigBox" style="display: none;" onclick="promptFreeCount()">
                 <span>張數:</span>
                 <span id="freeCountDisplay" style="color: #fff; font-weight: bold;">3</span>
@@ -332,7 +337,6 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
-    <!-- 畫面下方獨立置中的橫向計數器欄位 -->
     <div class="visitor-counter-bar" id="visitorCount">
         🍸 載入訪客數中...
     </div>
