@@ -107,7 +107,7 @@
             color: #f8fafc;
         }
         .welcome-instructions {
-            font-size: 14.8px;
+            font-size: 10.8px;
             line-height: 2.2;
             color: #cbd5e1;
             margin-top: 12px;
@@ -116,7 +116,7 @@
         }
         .welcome-instructions-title {
             font-weight: bold;
-            margin-bottom: 14px;
+            margin-bottom: 8px;
             font-size: 12px;
             color: #38bdf8;
             text-align: center;
@@ -222,6 +222,28 @@
         .brand-name { font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
+
+        /* 右下角計數器樣式調整 */
+        .stats-footer {
+            position: fixed;
+            bottom: 35px;
+            left: 16px;
+            background: rgba(21, 24, 33, 0.9);
+            border: 1px solid #2f364b;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            z-index: 999;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            color: #94a3b8;
+        }
+        .stats-footer a {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -278,6 +300,17 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
+    <!-- 左下方新增的計數器資訊欄位 -->
+    <div class="stats-footer">
+        <div id="online-count">目前在線：-- 人</div>
+        <div id="history-count">歷史瀏覽次數：-- 次</div>
+        <div style="display: none;">
+            <script type="text/javascript" src="https://freehitcounters.org/count/k5je"></script><br>
+            <a href='https://www.pferdeversicherung.at/'>Pferd Versicherung Österreich</a> 
+            <script type='text/javascript' src='https://www.whomania.com/ctr?id=f1b52da85f0aa9901b8d0ca51e186f843bce80f7'></script>
+        </div>
+    </div>
+
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">✨ 雷諾曼現實細節展開 ✨</div>
@@ -287,6 +320,38 @@
     </div>
 
     <script>
+        const token = 'b2d5f4783e05b86f';
+        
+        // 即時在線人數
+        function updateOnlineUser() {
+            fetch('https://statistics.wrlcc.synology.me/update.php?token=' + token , {
+                credentials: 'include'
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('online-count').textContent = `目前在線：${data.online_users} 人`;
+            })
+            .catch(e => console.error(e));
+        }
+        
+        setInterval(updateOnlineUser, 10000);
+        updateOnlineUser();
+        
+        // 歷史瀏覽次數
+        function updatehistory() {
+            fetch('https://statistics.wrlcc.synology.me/history.php?token=' + token, {
+                credentials: 'include'
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('history-count').textContent = `歷史瀏覽次數：${data.history_users} 次`;
+            })
+            .catch(e => console.error(e));
+        }
+        
+        setInterval(updatehistory, 10000);
+        updatehistory();
+
         function toggleSpreadConfig() {
             let spreadVal = document.getElementById("spreadSelect").value;
             let freeBox = document.getElementById("freeConfigBox");
