@@ -203,28 +203,8 @@
         .modal-card-item { background: #232736; border: 1px solid #2f364b; padding: 10px; border-radius: 6px; display: flex; gap: 12px; align-items: flex-start; }
         .modal-close-btn { margin-top: 12px; background: var(--accent); color: #fff; padding: 10px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; text-align: center; font-size: 14px; }
 
-        .brand-footer {
-            position: fixed;
-            bottom: 35px;
-            right: 16px;
-            background: rgba(21, 24, 33, 0.9);
-            border: 1px solid #2f364b;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            z-index: 999;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2px;
-        }
-        .brand-name { font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
-        .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
-        .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
-
-        /* 下方橫條計數器樣式 */
-        .visitor-counter {
+        /* 下方資訊與計數器列 */
+        .bottom-bar {
             position: fixed;
             bottom: 0;
             left: 0;
@@ -232,20 +212,44 @@
             background: rgba(13, 15, 20, 0.95);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(8px);
-            padding: 8px 16px;
-            text-align: center;
-            font-size: 13px;
-            color: #94a3b8;
-            z-index: 998;
-            letter-spacing: 0.5px;
+            padding: 10px 20px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
+            z-index: 998;
+            font-size: 13px;
         }
+        .brand-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+        }
+        .brand-info .brand-name {
+            font-weight: bold;
+            color: #38bdf8;
+        }
+        .brand-info .brand-threads {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .brand-info .brand-threads:hover {
+            color: #f8fafc;
+            text-decoration: underline;
+        }
+        
+        .visitor-counter {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        /* 隱藏外掛帶來的多餘連結 */
         .visitor-counter a {
             display: none !important;
+        }
+        .visitor-counter br {
+            display: none;
         }
     </style>
 </head>
@@ -298,18 +302,17 @@
         </div>
     </div>
 
-    <div class="brand-footer">
-        <span class="brand-name">醉酒塔羅 - 李特</span>
-        <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
-    </div>
-
-    <!-- 畫面下方的計數器橫條列 -->
-    <div class="visitor-counter">
-        <span>🍸 歡迎使用，您是第：</span>
-        <script type="text/javascript" src="https://freehitcounters.org/count/k5je"></script>
-        <span>位深夜酒客</span>
-        <a href='https://www.pferdeversicherung.at/'>Pferd Versicherung Österreich</a> 
-        <script type='text/javascript' src='https://www.whomania.com/ctr?id=f1b52da85f0aa9901b8d0ca51e186f843bce80f7'></script>
+    <!-- 畫面下方整合列：左側品牌資訊一行顯示，右側放置計數器 -->
+    <div class="bottom-bar">
+        <div class="brand-info">
+            <span class="brand-name">醉酒塔羅 - 李特</span>
+            <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
+        </div>
+        <div class="visitor-counter">
+            <script type="text/javascript" src="https://freehitcounters.org/count/k5je"></script><br>
+            <a href='https://www.pferdeversicherung.at/'>Pferd Versicherung Österreich</a> 
+            <script type='text/javascript' src='https://www.whomania.com/ctr?id=f1b52da85f0aa9901b8d0ca51e186f843bce80f7'></script>
+        </div>
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -455,7 +458,7 @@
             let lenoHtml = "";
             if(lenoCards && lenoCards.length > 0) {
                 let lenoDataStr = encodeURIComponent(JSON.stringify(lenoCards));
-                lenoHtml = '<div class="leno-bar"><button class="leno-btn" onclick="openLenoModal(\'' + lenoDataStr + \')">🔍 查看雷諾曼訊息 (共 ' + lenoCards.length + ' 張)</button></div>';
+                lenoHtml = '<div class="leno-bar"><button class="leno-btn" onclick="openLenoModal(\'' + lenoDataStr + '\')">🔍 查看雷諾曼訊息 (共 ' + lenoCards.length + ' 張)</button></div>';
             }
 
             let html = '<div class="card-box">';
