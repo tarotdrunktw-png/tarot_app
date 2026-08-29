@@ -107,7 +107,7 @@
             color: #f8fafc;
         }
         .welcome-instructions {
-            font-size: 13.8px;
+            font-size: 14px;
             line-height: 2.2;
             color: #cbd5e1;
             margin-top: 12px;
@@ -116,7 +116,7 @@
         }
         .welcome-instructions-title {
             font-weight: bold;
-            margin-bottom: 14px;
+            margin-bottom: 13.5px;
             font-size: 12px;
             color: #38bdf8;
             text-align: center;
@@ -223,8 +223,8 @@
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
 
-        /* 右下角計數器樣式調整 */
-        .stats-footer {
+        /* 左下方自製計數器欄位樣式 */
+        .visitor-counter {
             position: fixed;
             bottom: 35px;
             left: 16px;
@@ -233,16 +233,9 @@
             padding: 8px 14px;
             border-radius: 8px;
             font-size: 13px;
+            color: #94a3b8;
             z-index: 999;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 2px;
-            color: #94a3b8;
-        }
-        .stats-footer a {
-            display: none !important;
         }
     </style>
 </head>
@@ -300,15 +293,9 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
-    <!-- 左下方新增的計數器資訊欄位 -->
-    <div class="stats-footer">
-        <div id="online-count">目前在線：-- 人</div>
-        <div id="history-count">歷史瀏覽次數：-- 次</div>
-        <div style="display: none;">
-            <script type="text/javascript" src="https://freehitcounters.org/count/k5je"></script><br>
-            <a href='https://www.pferdeversicherung.at/'>Pferd Versicherung Österreich</a> 
-            <script type='text/javascript' src='https://www.whomania.com/ctr?id=f1b52da85f0aa9901b8d0ca51e186f843bce80f7'></script>
-        </div>
+    <!-- 左下方計數器顯示區塊 -->
+    <div class="visitor-counter" id="visitorCount">
+        🍸 載入訪客數中...
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -320,37 +307,19 @@
     </div>
 
     <script>
-        const token = 'b2d5f4783e05b86f';
-        
-        // 即時在線人數
-        function updateOnlineUser() {
-            fetch('https://statistics.wrlcc.synology.me/update.php?token=' + token , {
-                credentials: 'include'
-            })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('online-count').textContent = `目前在線：${data.online_users} 人`;
-            })
-            .catch(e => console.error(e));
+        // 自製雲端計數器功能
+        async function initCounter() {
+            try {
+                let response = await fetch('https://api.counterapi.dev/v1/tarot-drunk-system/visits/up');
+                let data = await response.json();
+                document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${data.count} 位深夜酒客`;
+            } catch (e) {
+                console.error("計數器載入失敗", e);
+                document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅`;
+            }
         }
-        
-        setInterval(updateOnlineUser, 10000);
-        updateOnlineUser();
-        
-        // 歷史瀏覽次數
-        function updatehistory() {
-            fetch('https://statistics.wrlcc.synology.me/history.php?token=' + token, {
-                credentials: 'include'
-            })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('history-count').textContent = `歷史瀏覽次數：${data.history_users} 次`;
-            })
-            .catch(e => console.error(e));
-        }
-        
-        setInterval(updatehistory, 10000);
-        updatehistory();
+
+        initCounter();
 
         function toggleSpreadConfig() {
             let spreadVal = document.getElementById("spreadSelect").value;
