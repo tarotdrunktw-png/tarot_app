@@ -85,7 +85,6 @@
         .workspace { flex: 1; padding: 16px; display: flex; justify-content: center; align-items: center; overflow-y: auto; width: 100%; }
         .spread-container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
 
-        /* 歡迎畫面的置中與縮小40%樣式調整 */
         .welcome-box {
             text-align: center;
             padding: 40px 20px;
@@ -107,7 +106,7 @@
             color: #f8fafc;
         }
         .welcome-instructions {
-            font-size: 14.5px;
+            font-size: 14px;
             line-height: 2.2;
             color: #cbd5e1;
             margin-top: 12px;
@@ -280,7 +279,7 @@
                 <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
                 <div class="welcome-instructions">
                     <div class="welcome-instructions-title">使用方式：</div>
-                    <div>1. 深呼吸三次，讓自己的情緒平穩</div>
+                    <div>1. 深呼吸三次，讓情緒平穩</div>
                     <div>2. 閉上眼，在心中想好問題</div>
                     <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「開始占卜」</div>
                 </div>
@@ -307,13 +306,13 @@
     </div>
 
     <script>
-        // 自製雲端計數器功能 (正確解析 countAPI 回傳的屬性值)
+        // 改用穩定的 Abacus 免費雲端計數器 API
         async function initCounter() {
             try {
-                let response = await fetch('https://api.counterapi.dev/v1/tarot-drunk-system/visits/up');
+                // 自動累加並取得目前造訪次數
+                let response = await fetch('https://abacus.jasoncameron.dev/hit/tarotdrunktw-png.github.io/tarot-visits');
                 let data = await response.json();
-                let countValue = data.value !== undefined ? data.value : data.count;
-                document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${countValue} 位深夜酒客`;
+                document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${data.value} 位深夜酒客`;
             } catch (e) {
                 console.error("計數器載入失敗", e);
                 document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅`;
@@ -497,7 +496,6 @@
                 bodyHtml += '<span style="background:' + polColors[c.polarity] + '; color:#000; padding:2px 6px; border-radius:3px; white-space:nowrap;">' + c.polarity + '</span>';
                 bodyHtml += '</div>';
                 bodyHtml += '<div style="color:#38bdf8;">▸ 撲克牌對應：' + c.suit + '</div>';
-                bodyNav = '<div style="color:#cbd5e1;">▸ 核心主題：' + c.theme + '</div>';
                 bodyHtml += '<div style="color:#cbd5e1;">▸ 核心主題：' + c.theme + '</div>';
                 bodyHtml += '<div style="color:#94a3b8;">▸ 現實顯化關鍵：' + c.keywords.join('、') + '</div>';
                 bodyHtml += '</div></div>';
