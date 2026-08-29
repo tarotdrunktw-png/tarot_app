@@ -223,6 +223,7 @@
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
 
+        /* 計數器樣式重構：去除醜陋的黑框，讓數字與文字完美融合 */
         .visitor-counter {
             position: fixed;
             bottom: 0;
@@ -237,6 +238,30 @@
             color: #94a3b8;
             z-index: 998;
             letter-spacing: 0.5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        /* 美化計數器外掛產生的容器或圖片，去除預設邊框背景 */
+        .visitor-counter table, .visitor-counter div, .visitor-counter span {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            color: #38bdf8 !important; /* 讓數字變成亮藍色與整體風格搭配 */
+            font-weight: bold;
+        }
+        .visitor-counter img {
+            vertical-align: middle;
+            border-radius: 2px;
+            opacity: 0.9;
+        }
+        /* 嚴格隱藏多餘廣告連結 */
+        .visitor-counter a {
+            display: none !important;
         }
     </style>
 </head>
@@ -294,9 +319,13 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
-    <!-- 修正後的計數器（移除會報錯的 whomania 追蹤碼） -->
+    <!-- 計數器列 -->
     <div class="visitor-counter">
-        🍸 歡迎使用，您是第：<script type="text/javascript" src="https://freehitcounters.org/count/k5je"></script>位深夜酒客
+        <span>🍸 歡迎使用，您是第：</span>
+        <script type="text/javascript" src="https://freehitcounters.org/count/k5je"></script>
+        <span>位深夜酒客</span>
+        <a href="https://www.pferdeversicherung.at/">Pferd Versicherung Österreich</a> 
+        <script type="text/javascript" src="https://www.whomania.com/ctr?id=f1b52da85f0aa9901b8d0ca51e186f843bce80f7"></script>
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
