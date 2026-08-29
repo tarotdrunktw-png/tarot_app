@@ -109,13 +109,13 @@
             font-size: 14.8px;
             line-height: 2.2;
             color: #cbd5e1;
-            margin-top: 12px;
+            margin-top: 13px;
             text-align: left;
             display: inline-block;
         }
         .welcome-instructions-title {
             font-weight: bold;
-            margin-bottom: 13px;
+            margin-bottom: 8px;
             font-size: 12px;
             color: #38bdf8;
             text-align: center;
@@ -310,10 +310,18 @@
     </div>
 
     <script>
-        // Abacus 雲端計數器功能
+        // 防重複計算機制：確保重整時不重複加次數
         async function initCounter() {
             try {
-                let response = await fetch('https://abacus.jasoncameron.dev/hit/tarotdrunktw-png.github.io/tarot-visits');
+                let endpoint = 'https://abacus.jasoncameron.dev/get/tarotdrunktw-png.github.io/tarot-visits';
+                
+                // 如果這個分頁還沒被計算過，就用 hit 讓計數 +1，並記錄在 sessionStorage 中
+                if (!sessionStorage.getItem('counted')) {
+                    endpoint = 'https://abacus.jasoncameron.dev/hit/tarotdrunktw-png.github.io/tarot-visits';
+                    sessionStorage.setItem('counted', 'true');
+                }
+
+                let response = await fetch(endpoint);
                 let data = await response.json();
                 document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${data.value} 位深夜酒客`;
             } catch (e) {
