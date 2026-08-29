@@ -107,7 +107,7 @@
             color: #f8fafc;
         }
         .welcome-instructions {
-            font-size: 14px;
+            font-size: 14.5px;
             line-height: 2.2;
             color: #cbd5e1;
             margin-top: 12px;
@@ -307,12 +307,13 @@
     </div>
 
     <script>
-        // 自製雲端計數器功能
+        // 自製雲端計數器功能 (正確解析 countAPI 回傳的屬性值)
         async function initCounter() {
             try {
                 let response = await fetch('https://api.counterapi.dev/v1/tarot-drunk-system/visits/up');
                 let data = await response.json();
-                document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${data.count} 位深夜酒客`;
+                let countValue = data.value !== undefined ? data.value : data.count;
+                document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${countValue} 位深夜酒客`;
             } catch (e) {
                 console.error("計數器載入失敗", e);
                 document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅`;
@@ -496,6 +497,7 @@
                 bodyHtml += '<span style="background:' + polColors[c.polarity] + '; color:#000; padding:2px 6px; border-radius:3px; white-space:nowrap;">' + c.polarity + '</span>';
                 bodyHtml += '</div>';
                 bodyHtml += '<div style="color:#38bdf8;">▸ 撲克牌對應：' + c.suit + '</div>';
+                bodyNav = '<div style="color:#cbd5e1;">▸ 核心主題：' + c.theme + '</div>';
                 bodyHtml += '<div style="color:#cbd5e1;">▸ 核心主題：' + c.theme + '</div>';
                 bodyHtml += '<div style="color:#94a3b8;">▸ 現實顯化關鍵：' + c.keywords.join('、') + '</div>';
                 bodyHtml += '</div></div>';
