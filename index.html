@@ -302,6 +302,7 @@
                     <option value="diary">🃏 塔羅日記 (單張)</option>
                     <option value="two">⚖️ 二擇一</option>
                     <option value="triangle">🔺 聖三角</option>
+                    <option value="celtic5">✝️ 十字法 (五張)</option>
                     <option value="free">🎲 無牌陣</option>
                 </select>
             </div>
@@ -408,6 +409,7 @@
             if (spreadVal === "diary") drawDailyDiary();
             else if (spreadVal === "two") drawTwoChoices();
             else if (spreadVal === "triangle") drawHolyTriangle();
+            else if (spreadVal === "celtic5") drawCeltic5();
             else if (spreadVal === "free") drawFreeSpread();
         }
 
@@ -430,7 +432,7 @@
             {no: 15, name: "惡魔", en: "The Devil", theme: "靈性核心與大局走勢", upright: "物質束縛、執念誘惑、成癮依賴、陰暗面", reversed: "擺脫枷鎖、重獲自由、覺醒突破、認清陷阱", file: "RWS1909_-_15_Devil.jpeg"},
             {no: 16, name: "高塔", en: "The Tower", theme: "靈性核心與大局走勢", upright: "突發劇變、體系崩塌、幻象破滅、震撼啟蒙", reversed: "恐懼改變、避免災難、勉強支撐、餘震未平", file: "RWS1909_-_16_Tower.jpeg"},
             {no: 17, name: "星星", en: "The Star", theme: "靈性核心與大局走勢", upright: "希望指引、靈感湧現、寧靜信心、心靈療癒", reversed: "絕望灰心、失去信念、悲觀消極、靈感枯竭", file: "RWS1909_-_17_Star.jpeg"},
-            {no: 18, name: "月亮", en: "The Moon", theme: "靈性核心與大局走勢", upright: "潛在恐懼、幻象焦慮、直覺波動、模糊不明", reversed: "迷霧消散、看清真相、釋放恐懼、情緒平復", file: "RWS1909_-_18_Moon.jpeg"},
+            {no: 18, name: "月亮", en: "The Moon", theme: "靈性核心與大局走勢", upright: "潛在恐懼、幻象焦慮/直覺波動、模糊不明", reversed: "迷霧消散、看清真相、釋放恐懼、情緒平復", file: "RWS1909_-_18_Moon.jpeg"},
             {no: 19, name: "太陽", en: "The Sun", theme: "靈性核心與大局走勢", upright: "成功喜悅、活力充沛、真理顯明、自信光明", reversed: "暫時低落、過度樂觀、虛榮自滿、延遲成功", file: "RWS1909_-_19_Sun.jpeg"},
             {no: 20, name: "審判", en: "The Judgement", theme: "靈性核心與大局走勢", upright: "生命召喚、重大覺醒、清算重獲新生、明智抉擇", reversed: "自我懷疑、逃避召喚、重複犯錯、悔恨內疚", file: "RWS1909_-_20_Judgement.jpeg"},
             {no: 21, name: "世界", en: "The World", theme: "靈性核心與大局走勢", upright: "圓滿達成、階段完成、完整合一、展翅高飛", reversed: "未竟之志、延宕拖延、缺乏收尾、受限束縛", file: "RWS1909_-_21_World.jpeg"}
@@ -640,6 +642,33 @@
             html += '<div class="branch-col">' + createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【第三張·未來趨勢】 依照現有軌跡發展") + '</div>';
             html += '</div>';
 
+            area.innerHTML = html;
+        }
+
+        function drawCeltic5() {
+            let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
+            let tCards = getRandomTarot(5);
+            let lenoPool = shuffle(LENORMAND_DECK);
+            let area = document.getElementById("spreadArea");
+
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
+            html += '<div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;">';
+            
+            let titles = [
+                "【第一張·現狀核心】 當前的心境與處境",
+                "【第二張·阻礙挑戰】 目前面臨的困難或考驗",
+                "【第三張·過去根基】 導致現狀的遠因或過去影響",
+                "【第四張·未來走向】 即將到來的發展趨勢",
+                "【第五張·最終結果】 事情的最終歸宿與指引"
+            ];
+
+            tCards.forEach(function(card, idx) {
+                html += '<div style="width:100%; max-width:450px;">';
+                html += createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), titles[idx]);
+                html += '</div>';
+            });
+
+            html += '</div>';
             area.innerHTML = html;
         }
 
