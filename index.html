@@ -53,34 +53,57 @@
         .control-panel {
             background-color: var(--panel-bg);
             backdrop-filter: blur(10px);
-            padding: 16px;
+            padding: 10px 12px;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            gap: 12px;
+            gap: 8px;
             text-align: center;
         }
-        .title { font-size: 18px; font-weight: bold; color: #e4e6eb; width: 100%; }
-        .control-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .title { font-size: 16px; font-weight: bold; color: #e4e6eb; width: 100%; }
+        
+        /* 讓手機與電腦版的控制選單選項能緊湊並排縮放 */
+        .control-row { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 6px; 
+            flex-wrap: nowrap; 
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
         
         button, select, input {
             background-color: var(--accent);
             color: #fff;
             border: none;
-            padding: 8px 14px;
-            font-size: 14px;
+            padding: 6px 10px;
+            font-size: 13px;
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
             transition: background 0.2s;
+            white-space: nowrap;
         }
         button:hover { background-color: var(--accent-hover); }
-        select { background-color: #0d0f14; border: 1px solid #475569; color: #fff; padding: 8px 12px; }
+        select { background-color: #0d0f14; border: 1px solid #475569; color: #fff; padding: 6px 8px; font-size: 12px; }
         
-        .config-box { background: rgba(30, 34, 48, 0.8); padding: 6px 10px; border-radius: 4px; border: 1px solid #33394d; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #38bdf8; flex-wrap: wrap; }
-        input[type="number"] { width: 50px; background: #0d0f14; color: #fff; text-align: center; border: 1px solid #475569; padding: 4px; }
+        .config-box { 
+            background: rgba(30, 34, 48, 0.8); 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            border: 1px solid #33394d; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 4px; 
+            font-size: 12px; 
+            color: #38bdf8; 
+            white-space: nowrap;
+        }
+        input[type="number"] { width: 40px; background: #0d0f14; color: #fff; text-align: center; border: 1px solid #475569; padding: 2px; font-size: 12px; }
 
         .workspace { flex: 1; padding: 16px; display: flex; justify-content: center; align-items: center; overflow-y: auto; width: 100%; }
         .spread-container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
@@ -109,13 +132,13 @@
             font-size: 14.8px;
             line-height: 2.2;
             color: #cbd5e1;
-            margin-top: 13px;
+            margin-top: 12px;
             text-align: left;
             display: inline-block;
         }
         .welcome-instructions-title {
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-size: 12px;
             color: #38bdf8;
             text-align: center;
@@ -248,12 +271,12 @@
         <div class="title">醉酒塔羅 🔮 偉特塔羅 × 雷諾曼 占卜系統</div>
         <div class="control-row">
             <div class="config-box">
-                <span>選擇牌陣:</span>
+                <span>牌陣:</span>
                 <select id="spreadSelect" onchange="toggleSpreadConfig()">
-                    <option value="diary">🃏 單張塔羅日記</option>
-                    <option value="two">⚖️ 二擇一牌陣</option>
-                    <option value="triangle">🔺 聖三角牌陣</option>
-                    <option value="free">🎲 自訂無牌陣</option>
+                    <option value="diary">🃏 塔羅日記</option>
+                    <option value="two">⚖️ 二擇一</option>
+                    <option value="triangle">🔺 聖三角</option>
+                    <option value="free">🎲 自訂</option>
                 </select>
             </div>
 
@@ -263,7 +286,7 @@
             </div>
 
             <div class="config-box">
-                <span>附帶雷諾曼:</span>
+                <span>雷諾曼:</span>
                 <select id="lenoCount">
                     <option value="0" selected>0 張</option>
                     <option value="1">1 張</option>
@@ -272,7 +295,7 @@
                 </select>
             </div>
 
-            <button onclick="executeDraw()">✨ 開始占卜</button>
+            <button onclick="executeDraw()">✨ 開始</button>
         </div>
     </div>
 
@@ -315,7 +338,6 @@
             try {
                 let endpoint = 'https://abacus.jasoncameron.dev/get/tarotdrunktw-png.github.io/tarot-visits';
                 
-                // 如果這個分頁還沒被計算過，就用 hit 讓計數 +1，並記錄在 sessionStorage 中
                 if (!sessionStorage.getItem('counted')) {
                     endpoint = 'https://abacus.jasoncameron.dev/hit/tarotdrunktw-png.github.io/tarot-visits';
                     sessionStorage.setItem('counted', 'true');
@@ -323,7 +345,7 @@
 
                 let response = await fetch(endpoint);
                 let data = await response.json();
-                document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅，您是第：${data.value} 位深夜酒客`;
+                document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${data.value} 位深夜酒客`;
             } catch (e) {
                 console.error("計數器載入失敗", e);
                 document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅`;
