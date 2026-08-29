@@ -323,7 +323,7 @@
 
                 let response = await fetch(endpoint);
                 let data = await response.json();
-                document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${data.value} 位深夜酒客`;
+                document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅，您是第：${data.value} 位深夜酒客`;
             } catch (e) {
                 console.error("計數器載入失敗", e);
                 document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅`;
