@@ -223,7 +223,7 @@
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
 
-        /* 計數器樣式重構：去除醜陋的黑框，讓數字與文字完美融合 */
+        /* 計數器樣式重構：移除黑色對話框並保留數字正常顯示 */
         .visitor-counter {
             position: fixed;
             bottom: 0;
@@ -244,24 +244,14 @@
             gap: 4px;
             flex-wrap: wrap;
         }
-        /* 美化計數器外掛產生的容器或圖片，去除預設邊框背景 */
-        .visitor-counter table, .visitor-counter div, .visitor-counter span {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            color: #38bdf8 !important; /* 讓數字變成亮藍色與整體風格搭配 */
-            font-weight: bold;
-        }
-        .visitor-counter img {
-            vertical-align: middle;
-            border-radius: 2px;
-            opacity: 0.9;
-        }
-        /* 嚴格隱藏多餘廣告連結 */
-        .visitor-counter a {
+        /* 只針對不需要的外部贊助商連結進行隱藏 */
+        .visitor-counter > a {
             display: none !important;
+        }
+        /* 讓計數器外掛的數字正常顯示，並帶點亮藍色 */
+        .visitor-counter font, .visitor-counter span {
+            color: #38bdf8 !important;
+            font-weight: bold;
         }
     </style>
 </head>
