@@ -63,7 +63,7 @@
             text-align: center;
         }
         .title { font-size: 18px; font-weight: bold; color: #e4e6eb; width: 100%; }
-        .btn-group { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .control-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
         
         button, select, input {
             background-color: var(--accent);
@@ -77,7 +77,7 @@
             transition: background 0.2s;
         }
         button:hover { background-color: var(--accent-hover); }
-        select { background-color: #0d0f14; border: 1px solid #475569; color: #fff; }
+        select { background-color: #0d0f14; border: 1px solid #475569; color: #fff; padding: 8px 12px; }
         
         .config-box { background: rgba(30, 34, 48, 0.8); padding: 6px 10px; border-radius: 4px; border: 1px solid #33394d; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #38bdf8; flex-wrap: wrap; }
         input[type="number"] { width: 50px; background: #0d0f14; color: #fff; text-align: center; border: 1px solid #475569; padding: 4px; }
@@ -221,17 +221,27 @@
 
     <div class="control-panel">
         <div class="title">醉酒塔羅 🔮 偉特塔羅 × 雷諾曼 占卜系統</div>
-        <div class="btn-group">
-            <button onclick="drawDailyDiary()">🃏 單張塔羅日記</button>
-            <button onclick="drawTwoChoices()">⚖️ 二擇一牌陣</button>
-            <button onclick="drawHolyTriangle()">🔺 聖三角牌陣</button>
+        <div class="control-row">
+            <!-- 牌陣下拉式選單 -->
             <div class="config-box">
-                <span>無牌陣張數:</span>
-                <input type="number" id="freeCount" value="3" min="1" max="10">
-                <button onclick="drawFreeSpread()">自由抽牌</button>
+                <span>選擇牌陣:</span>
+                <select id="spreadSelect" onchange="toggleSpreadConfig()">
+                    <option value="diary">🃏 單張塔羅日記</option>
+                    <option value="two">⚖️ 二擇一牌陣</option>
+                    <option value="triangle">🔺 聖三角牌陣</option>
+                    <option value="free">🎲 自訂無牌陣</option>
+                </select>
             </div>
+
+            <!-- 動態張數設定（預設隱藏，選自訂無牌陣時顯示） -->
+            <div class="config-box" id="freeConfigBox" style="display: none;">
+                <span>張數:</span>
+                <input type="number" id="freeCount" value="3" min="1" max="10">
+            </div>
+
+            <!-- 雷諾曼設定 -->
             <div class="config-box">
-                <span>塔羅附帶雷諾曼:</span>
+                <span>附帶雷諾曼:</span>
                 <select id="lenoCount">
                     <option value="0" selected>0 張</option>
                     <option value="1">1 張</option>
@@ -239,6 +249,9 @@
                     <option value="3">3 張</option>
                 </select>
             </div>
+
+            <!-- 執行抽牌按鈕 -->
+            <button onclick="executeDraw()">✨ 開始占卜</button>
         </div>
     </div>
 
@@ -246,12 +259,11 @@
         <div id="spreadArea" class="spread-container">
             <div class="welcome-box">
                 <p class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</p>
-                <p>✨ 請點擊上方按鈕開始進行占卜 ✨</p>
+                <p>✨ 請點擊上方選單與按鈕開始進行占卜 ✨</p>
                 <p style="font-size: 16px; color: #64748b; margin-top: 15px;">使用方式：</p>
                 <p style="font-size: 14px; color: #64748b;">1. 深呼吸三次，讓自己的情緒平穩</p>
                 <p style="font-size: 14px; color: #64748b;">2. 閉上眼，在心中想好問題</p>
-                <p style="font-size: 14px; color: #64748b;">3. 思考完畢後，按下所想要使用的占卜牌陣</p>
-                <p style="font-size: 14px; color: #64748b;">4. 如果想搭配雷諾曼卡，請在畫面右上方選取雷諾曼卡張數</p>
+                <p style="font-size: 14px; color: #64748b;">3. 於上方選單挑選牌陣與雷諾曼張數，按下「開始占卜」</p>
             </div>
         </div>
     </div>
@@ -274,6 +286,7 @@
     </div>
 
     <script>
+        // 訪客計數器
         window.addEventListener('DOMContentLoaded', () => {
             let count = localStorage.getItem('bar_visitor_count');
             if (!count) {
@@ -284,6 +297,26 @@
             localStorage.setItem('bar_visitor_count', count);
             document.getElementById('visitorNum').innerText = count;
         });
+
+        // 切換牌陣時是否顯示自訂張數輸入框
+        function toggleSpreadConfig() {
+            let spreadVal = document.getElementById("spreadSelect").value;
+            let freeBox = document.getElementById("freeConfigBox");
+            if (spreadVal === "free") {
+                freeBox.style.display = "flex";
+            } else {
+                freeBox.style.display = "none";
+            }
+        }
+
+        // 統一觸發抽牌分發
+        function executeDraw() {
+            let spreadVal = document.getElementById("spreadSelect").value;
+            if (spreadVal === "diary") drawDailyDiary();
+            else if (spreadVal === "two") drawTwoChoices();
+            else if (spreadVal === "triangle") drawHolyTriangle();
+            else if (spreadVal === "free") drawFreeSpread();
+        }
 
         const MAJOR_ARCANA = [
             {no: 0, name: "愚者", en: "The Fool", theme: "靈性核心與大局走勢", upright: "新的開始、冒險、純真、自發性", reversed: "魯莽、冒險過度、盲目、不負責任", file: "RWS1909_-_00_Fool.jpeg"},
