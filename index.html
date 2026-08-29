@@ -21,7 +21,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", sans-serif; }
         
-        /* --- 背景與霧化設定 --- */
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -184,13 +183,25 @@
         .brand-name { font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
+
+        .welcome-box {
+            color: var(--text-sub);
+            margin-top: 80px;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.8;
+        }
+        .welcome-box p { margin-bottom: 12px; }
+        .welcome-title { font-size: 16px; font-weight: bold; color: #e4e6eb; }
     </style>
 </head>
 <body>
 
     <div class="control-panel">
-        <div class="title">醉酒塔羅 🔮 偉特塔羅 × 復古雷諾曼 占卜系統</div>
+        <div class="title">🔮 偉特塔羅 × 復古雷諾曼 專業占卜系統</div>
         <div class="btn-group">
+            <!-- 新增單張塔羅日記按鈕，排在二擇一之前 -->
+            <button onclick="drawDailyDiary()">🃏 單張塔羅日記</button>
             <button onclick="drawTwoChoices()">⚖️ 二擇一牌陣</button>
             <button onclick="drawHolyTriangle()">🔺 聖三角牌陣</button>
             <div class="config-box">
@@ -212,13 +223,14 @@
 
     <div class="workspace">
         <div id="spreadArea" class="spread-container">
-            <div style="color: var(--text-sub); margin-top: 100px; text-align: center; padding: 40px;">
-                ✨ 請點擊上方按鈕開始進行占卜 ✨<br><br>
-                <p style="font-size: 20px; color: #64748b;">使用方式：</p>
-                <p style="font-size: 20px; color: #64748b;">1. 深呼吸三字，讓自己的情緒平穩</p>
-                <p style="font-size: 20px; color: #64748b;">2. 閉上眼，在心中想好問題</p>
-                <p style="font-size: 20px; color: #64748b;">3. 思考完畢後，按下所想要使用的占卜牌陣</p>
-                <p style="font-size: 20px; color: #64748b;">4. 如果想用雷諾曼卡，請在畫面右上方選取雷諾曼卡張數</p>
+            <div class="welcome-box">
+                <p class="welcome-title">✨ 歡迎來到 偉特塔羅 × 復古雷諾曼 占卜系統 ✨</p>
+                <p> ✨ 請點擊上方按鈕開始進行占卜 ✨<br><br>
+                <p style="font-size: 20px; color: #64748b;">使用方式：</p>
+                <p style="font-size: 20px; color: #64748b;">1. 深呼吸三字，讓自己的情緒平穩</p>
+                <p style="font-size: 20px; color: #64748b;">2. 閉上眼，在心中想好問題</p>
+                <p style="font-size: 20px; color: #64748b;">3. 思考完畢後，按下所想要使用的占卜牌陣</p>
+                <p style="font-size: 20px; color: #64748b;">4. 如果想用雷諾曼卡，請在畫面右上方選取雷諾曼卡張數</p>
             </div>
         </div>
     </div>
@@ -407,6 +419,22 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
+        // 0. 單張塔羅日記
+        function drawDailyDiary() {
+            let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
+            let tCard = getRandomTarot(1)[0];
+            let lenoPool = shuffle(LENORMAND_DECK);
+            let area = document.getElementById("spreadArea");
+
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🃏 單 張 塔 羅 日 記 】</h2>';
+            html += '<div style="width:100%; max-width:450px;">';
+            html += createCardBoxHtml(tCard, getLenoBatch(lenoPool, extCount), "【今日能量指引】 每日心靈核心與提醒");
+            html += '</div>';
+
+            area.innerHTML = html;
+        }
+
+        // 1. 二擇一牌陣
         function drawTwoChoices() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(5);
@@ -438,13 +466,14 @@
             area.innerHTML = html;
         }
 
+        // 2. 聖三角牌陣
         function drawHolyTriangle() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(3);
             let lenoPool = shuffle(LENORMAND_DECK);
             let area = document.getElementById("spreadArea");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 】</h2>';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 (過去 ➔ 現在 ➔ 未來) 】</h2>';
             
             html += '<div class="branch-row">';
             html += '<div class="branch-col">' + createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第一張·過去起因】 事情源頭與歷史根基") + '</div>';
@@ -455,6 +484,7 @@
             area.innerHTML = html;
         }
 
+        // 3. 無牌陣
         function drawFreeSpread() {
             let count = parseInt(document.getElementById("freeCount").value) || 3;
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
