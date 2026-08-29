@@ -28,7 +28,7 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            padding-bottom: 50px;
+            padding-bottom: 90px;
             position: relative;
         }
 
@@ -166,7 +166,7 @@
 
         .brand-footer {
             position: fixed;
-            bottom: 12px;
+            bottom: 35px;
             right: 16px;
             background: rgba(21, 24, 33, 0.9);
             border: 1px solid #2f364b;
@@ -184,6 +184,27 @@
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
 
+        /* 畫面正下方使用人數統計（酒吧風） */
+        .visitor-counter {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(13, 15, 20, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 13px;
+            color: #94a3b8;
+            z-index: 998;
+            letter-spacing: 0.5px;
+        }
+        .visitor-counter span {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+
         .welcome-box {
             color: var(--text-sub);
             margin-top: 80px;
@@ -200,7 +221,6 @@
     <div class="control-panel">
         <div class="title">🔮 偉特塔羅 × 復古雷諾曼 占卜系統</div>
         <div class="btn-group">
-            <!-- 新增單張塔羅日記按鈕，排在二擇一之前 -->
             <button onclick="drawDailyDiary()">🃏 單張塔羅日記</button>
             <button onclick="drawTwoChoices()">⚖️ 二擇一牌陣</button>
             <button onclick="drawHolyTriangle()">🔺 聖三角牌陣</button>
@@ -225,12 +245,12 @@
         <div id="spreadArea" class="spread-container">
             <div class="welcome-box">
                 <p class="welcome-title">✨ 歡迎來到 偉特塔羅 × 復古雷諾曼 占卜系統 ✨</p>
-                <p> ✨ 請點擊上方按鈕開始進行占卜 ✨<br><br>
-                <p style="font-size: 20px; color: #64748b;">使用方式：</p>
-                <p style="font-size: 20px; color: #64748b;">1. 深呼吸三字，讓自己的情緒平穩</p>
-                <p style="font-size: 20px; color: #64748b;">2. 閉上眼，在心中想好問題</p>
-                <p style="font-size: 20px; color: #64748b;">3. 思考完畢後，按下所想要使用的占卜牌陣</p>
-                <p style="font-size: 20px; color: #64748b;">4. 如果想用雷諾曼卡，請在畫面右上方選取雷諾曼卡張數</p>
+                <p>✨ 請點擊上方按鈕開始進行占卜 ✨</p>
+                <p style="font-size: 16px; color: #64748b; margin-top: 15px;">使用方式：</p>
+                <p style="font-size: 14px; color: #64748b;">1. 深呼吸三次，讓自己的情緒平穩</p>
+                <p style="font-size: 14px; color: #64748b;">2. 閉上眼，在心中想好問題</p>
+                <p style="font-size: 14px; color: #64748b;">3. 思考完畢後，按下所想要使用的占卜牌陣</p>
+                <p style="font-size: 14px; color: #64748b;">4. 如果想用雷諾曼卡，請在畫面右上方選取雷諾曼卡張數</p>
             </div>
         </div>
     </div>
@@ -238,6 +258,11 @@
     <div class="brand-footer">
         <span class="brand-name">醉酒塔羅 - 李特</span>
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
+    </div>
+
+    <!-- 畫面正下方使用人數統計 -->
+    <div class="visitor-counter">
+        🍸 歡迎使用，您是第：<span id="visitorNum">載入中...</span> 位深夜酒客
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -249,6 +274,18 @@
     </div>
 
     <script>
+        // 訪客計數器（結合 localStorage 模擬獨立訪客編號）
+        window.addEventListener('DOMContentLoaded', () => {
+            let count = localStorage.getItem('bar_visitor_count');
+            if (!count) {
+                count = 1042; // 設定酒吧起始基數
+            } else {
+                count = parseInt(count) + 1;
+            }
+            localStorage.setItem('bar_visitor_count', count);
+            document.getElementById('visitorNum').innerText = count;
+        });
+
         const MAJOR_ARCANA = [
             {no: 0, name: "愚者", en: "The Fool", theme: "靈性核心與大局走勢", upright: "新的開始、冒險、純真、自發性", reversed: "魯莽、冒險過度、盲目、不負責任", file: "RWS1909_-_00_Fool.jpeg"},
             {no: 1, name: "魔術師", en: "The Magician", theme: "靈性核心與大局走勢", upright: "創造力、技能、資源整合、主動顯化", reversed: "欺瞞、能力未發揮、心懷不軌、受挫", file: "RWS1909_-_01_Magician.jpeg"},
@@ -419,7 +456,6 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
-        // 0. 單張塔羅日記
         function drawDailyDiary() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCard = getRandomTarot(1)[0];
@@ -434,7 +470,6 @@
             area.innerHTML = html;
         }
 
-        // 1. 二擇一牌陣
         function drawTwoChoices() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(5);
@@ -466,7 +501,6 @@
             area.innerHTML = html;
         }
 
-        // 2. 聖三角牌陣
         function drawHolyTriangle() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(3);
@@ -484,7 +518,6 @@
             area.innerHTML = html;
         }
 
-        // 3. 無牌陣
         function drawFreeSpread() {
             let count = parseInt(document.getElementById("freeCount").value) || 3;
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
