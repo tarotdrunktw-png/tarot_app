@@ -82,8 +82,45 @@
         .config-box { background: rgba(30, 34, 48, 0.8); padding: 6px 10px; border-radius: 4px; border: 1px solid #33394d; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #38bdf8; flex-wrap: wrap; }
         input[type="number"] { width: 50px; background: #0d0f14; color: #fff; text-align: center; border: 1px solid #475569; padding: 4px; }
 
-        .workspace { flex: 1; padding: 16px; display: flex; justify-content: center; overflow-y: auto; width: 100%; }
+        .workspace { flex: 1; padding: 16px; display: flex; justify-content: center; align-items: center; overflow-y: auto; width: 100%; }
         .spread-container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+        /* 歡迎畫面的置中與放大樣式調整 */
+        .welcome-box {
+            text-align: center;
+            padding: 40px 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .welcome-title {
+            font-size: 26px;
+            font-weight: bold;
+            line-height: 1.8;
+            margin-bottom: 24px;
+            color: #f8fafc;
+        }
+        .welcome-subtitle {
+            font-size: 26px;
+            font-weight: bold;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: #f8fafc;
+        }
+        .welcome-instructions {
+            font-size: 18px;
+            line-height: 2.2;
+            color: #cbd5e1;
+            margin-top: 20px;
+            text-align: left;
+            display: inline-block;
+        }
+        .welcome-instructions-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 20px;
+            color: #38bdf8;
+            text-align: center;
+        }
 
         .card-box {
             width: 100%;
@@ -244,12 +281,14 @@
     <div class="workspace">
         <div id="spreadArea" class="spread-container">
             <div class="welcome-box">
-                <p class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</p>
-                <p>✨ 請點擊上方選單與按鈕開始進行占卜 ✨</p>
-                <p style="font-size: 16px; color: #64748b; margin-top: 15px;">使用方式：</p>
-                <p style="font-size: 14px; color: #64748b;">1. 深呼吸三次，讓自己的情緒平穩</p>
-                <p style="font-size: 14px; color: #64748b;">2. 閉上眼，在心中想好問題</p>
-                <p style="font-size: 14px; color: #64748b;">3. 於上方選單挑選牌陣與雷諾曼張數，按下「開始占卜」</p>
+                <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
+                <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
+                <div class="welcome-instructions">
+                    <div class="welcome-instructions-title">使用方式：</div>
+                    <div>1. 深呼吸三次，讓自己的情緒平穩</div>
+                    <div>2. 閉上眼，在心中想好問題</div>
+                    <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「開始占卜」</div>
+                </div>
             </div>
         </div>
     </div>
