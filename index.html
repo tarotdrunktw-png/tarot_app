@@ -203,13 +203,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 4px;
         }
         .visitor-counter span {
             color: #38bdf8;
             font-weight: bold;
         }
-        /* 隱藏外掛帶進來的多餘贊助商連結，保持版面簡潔 */
+        /* 隱藏外掛多餘的贊助商連結 */
         .visitor-counter a {
             display: none;
         }
@@ -267,11 +267,9 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
-    <!-- 全網同步外部計數器外掛 -->
+    <!-- 修正後的計數器區塊 -->
     <div class="visitor-counter">
-        🍸 歡迎使用，您是第：
-        <script type="text/javascript" src="https://freehitcounters.org/count/k5j7"></script>
-        位深夜酒客
+        🍸 歡迎使用，您是第：<span id="counter-slot"><script type="text/javascript" src="https://freehitcounters.org/count/k5j7"></script></span>位深夜酒客
         <a href='https://www.pferdeversicherung.at/'>Pferd Versicherung Österreich</a> 
         <script type='text/javascript' src='https://www.whomania.com/ctr?id=291e37edfc0b48c547a2c269703ef744efde0aa6'></script>
     </div>
