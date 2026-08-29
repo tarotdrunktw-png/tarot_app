@@ -281,6 +281,7 @@
                 </select>
             </div>
 
+            <!-- 預設隱藏，唯有選到「自訂」時才會顯示在牌陣選擇的旁邊/下方 -->
             <div class="config-box" id="freeConfigBox" style="display: none;">
                 <span>張:</span>
                 <input type="number" id="freeCount" value="3" min="1" max="10">
@@ -346,7 +347,7 @@
 
                 let response = await fetch(endpoint);
                 let data = await response.json();
-                document.getElementById('visitorCount').textContent = `🍸 歡迎使用，您是第：${data.value} 位深夜酒客`;
+                document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅，您是第：${data.value} 位深夜酒客`;
             } catch (e) {
                 console.error("計數器載入失敗", e);
                 document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅`;
