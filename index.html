@@ -269,8 +269,9 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
+    <!-- 全網同步雲端計數器 -->
     <div class="visitor-counter">
-        🍸 歡迎使用，您是第：<span id="visitorNum">1042</span> 位深夜酒客
+        🍸 歡迎使用，您是第：<span id="visitorNum">連線中...</span> 位深夜酒客
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -282,16 +283,28 @@
     </div>
 
     <script>
-        // 絕對不翻車的智慧累加計數器
+        // 使用高效能全球同步 API (api.counterapi.dev)
         window.addEventListener('DOMContentLoaded', () => {
-            let count = localStorage.getItem('tarot_drunk_visitor_total');
-            if (!count) {
-                count = 1045; // 設定起始基數
-            } else {
-                count = parseInt(count) + 1;
-            }
-            localStorage.setItem('tarot_drunk_visitor_total', count);
-            document.getElementById('visitorNum').innerText = count;
+            const namespace = 'tarot_drunk_global';
+            const key = 'visits';
+
+            fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+                .then(response => response.json())
+                .then(data => {
+                    // API 回傳格式為 { "count": 數字 }
+                    if (data && typeof data.count === 'number') {
+                        document.getElementById('visitorNum').innerText = data.count;
+                    } else {
+                        throw new Error("Invalid format");
+                    }
+                })
+                .catch(error => {
+                    // 備用方案：若雲端瞬間忙碌，自動改用本地累加防護
+                    let localCount = localStorage.getItem('tarot_fallback_count');
+                    localCount = localCount ? parseInt(localCount) + 1 : 1050;
+                    localStorage.setItem('tarot_fallback_count', localCount);
+                    document.getElementById('visitorNum').innerText = localCount;
+                });
         });
 
         function toggleSpreadConfig() {
