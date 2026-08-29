@@ -103,8 +103,8 @@
             white-space: nowrap;
             flex-shrink: 1;
             min-width: 0;
+            cursor: pointer;
         }
-        input[type="number"] { width: 34px; background: #0d0f14; color: #fff; text-align: center; border: 1px solid #475569; padding: 2px; font-size: 11px; }
 
         .workspace { flex: 1; padding: 16px; display: flex; justify-content: center; align-items: center; overflow-y: auto; width: 100%; }
         .spread-container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
@@ -272,23 +272,23 @@
         <div class="title">醉酒塔羅 🔮 偉特塔羅 × 雷諾曼 占卜系統</div>
         <div class="control-row">
             <div class="config-box">
-                <span>選擇牌陣:</span>
+                <span>牌:</span>
                 <select id="spreadSelect" onchange="toggleSpreadConfig()">
                     <option value="diary">🃏 日記</option>
                     <option value="two">⚖️ 二擇一</option>
                     <option value="triangle">🔺 聖三角</option>
-                    <option value="free">🎲 自訂</option>
+                    <option value="free">🎲 無牌陣</option>
                 </select>
             </div>
 
-            <!-- 預設隱藏，唯有選到「自訂」時才會顯示在牌陣選擇的旁邊/下方 -->
-            <div class="config-box" id="freeConfigBox" style="display: none;">
+            <!-- 預設隱藏，唯有選到「自訂」時才會顯示 -->
+            <div class="config-box" id="freeConfigBox" style="display: none;" onclick="promptFreeCount()">
                 <span>張數:</span>
-                <input type="number" id="freeCount" value="3" min="1" max="10">
+                <span id="freeCountDisplay" style="color: #fff; font-weight: bold;">3</span>
             </div>
 
             <div class="config-box">
-                <span>搭配雷諾曼:</span>
+                <span>雷:</span>
                 <select id="lenoCount">
                     <option value="0" selected>0</option>
                     <option value="1">1</option>
@@ -335,6 +335,23 @@
     </div>
 
     <script>
+        // 用來記錄自訂抽牌張數的變數
+        let customCount = 3;
+
+        // 點擊「張數」方塊時彈出系統視窗輸入
+        function promptFreeCount() {
+            let input = prompt("請輸入自訂抽牌張數 (1 - 10)：", customCount);
+            if (input !== null) {
+                let val = parseInt(input);
+                if (!isNaN(val) && val >= 1 && val <= 10) {
+                    customCount = val;
+                    document.getElementById("freeCountDisplay").textContent = customCount;
+                } else {
+                    alert("請輸入有效的數字 (1 到 10 之間)");
+                }
+            }
+        }
+
         // 防重複計算機制：確保重整時不重複加次數
         async function initCounter() {
             try {
@@ -607,7 +624,7 @@
         }
 
         function drawFreeSpread() {
-            let count = parseInt(document.getElementById("freeCount").value) || 3;
+            let count = customCount;
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(count);
             let lenoPool = shuffle(LENORMAND_DECK);
