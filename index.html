@@ -223,7 +223,6 @@
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
 
-        /* 計數器樣式重構：移除黑色對話框並保留數字正常顯示 */
         .visitor-counter {
             position: fixed;
             bottom: 0;
@@ -238,20 +237,10 @@
             color: #94a3b8;
             z-index: 998;
             letter-spacing: 0.5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-            flex-wrap: wrap;
         }
-        /* 只針對不需要的外部贊助商連結進行隱藏 */
-        .visitor-counter > a {
-            display: none !important;
-        }
-        /* 讓計數器外掛的數字正常顯示，並帶點亮藍色 */
-        .visitor-counter font, .visitor-counter span {
-            color: #38bdf8 !important;
-            font-weight: bold;
+        /* 隱藏外掛多餘的贊助商連結 */
+        .visitor-counter a {
+            display: none;
         }
     </style>
 </head>
@@ -309,13 +298,11 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
-    <!-- 計數器列 -->
+    <!-- 更新後的計數器與外掛程式碼 -->
     <div class="visitor-counter">
-        <span>🍸 歡迎使用，您是第：</span>
-        <script type="text/javascript" src="https://freehitcounters.org/count/k5je"></script>
-        <span>位深夜酒客</span>
-        <a href="https://www.pferdeversicherung.at/">Pferd Versicherung Österreich</a> 
-        <script type="text/javascript" src="https://www.whomania.com/ctr?id=f1b52da85f0aa9901b8d0ca51e186f843bce80f7"></script>
+        🍸 歡迎使用，您是第：<script type="text/javascript" src="https://freehitcounters.org/count/k5je"></script>位深夜酒客<br>
+        <a href='https://www.pferdeversicherung.at/'>Pferd Versicherung Österreich</a> 
+        <script type='text/javascript' src='https://www.whomania.com/ctr?id=f1b52da85f0aa9901b8d0ca51e186f843bce80f7'></script>
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
