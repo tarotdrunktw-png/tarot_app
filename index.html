@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>偉特塔羅 × 雷諾曼 占卜系統</title>
+    <!-- 網頁分頁圖標 (Favicon) 設定 -->
+    <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
     <style>
         :root {
             --bg-color: #0d0f14;
@@ -184,7 +186,6 @@
         .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
 
-        /* 畫面正下方使用人數統計（酒吧風） */
         .visitor-counter {
             position: fixed;
             bottom: 0;
@@ -260,7 +261,6 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
-    <!-- 畫面正下方使用人數統計 -->
     <div class="visitor-counter">
         🍸 歡迎使用，您是第：<span id="visitorNum">載入中...</span> 位深夜酒客
     </div>
@@ -274,11 +274,10 @@
     </div>
 
     <script>
-        // 訪客計數器（結合 localStorage 模擬獨立訪客編號）
         window.addEventListener('DOMContentLoaded', () => {
             let count = localStorage.getItem('bar_visitor_count');
             if (!count) {
-                count = 1042; // 設定酒吧起始基數
+                count = 1042;
             } else {
                 count = parseInt(count) + 1;
             }
