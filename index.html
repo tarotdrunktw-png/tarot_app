@@ -283,27 +283,26 @@
     </div>
 
     <script>
-        // 使用高效能全球同步 API (api.counterapi.dev)
+        // 使用 Abacus 全球免費計數 API 進行自動同步與遞增
         window.addEventListener('DOMContentLoaded', () => {
-            const namespace = 'tarot_drunk_global';
+            const namespace = 'tarot_drunk_tw_app';
             const key = 'visits';
 
             fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
                 .then(response => response.json())
                 .then(data => {
-                    // API 回傳格式為 { "count": 數字 }
                     if (data && typeof data.count === 'number') {
                         document.getElementById('visitorNum').innerText = data.count;
                     } else {
-                        throw new Error("Invalid format");
+                        throw new Error("Invalid response");
                     }
                 })
                 .catch(error => {
-                    // 備用方案：若雲端瞬間忙碌，自動改用本地累加防護
-                    let localCount = localStorage.getItem('tarot_fallback_count');
-                    localCount = localCount ? parseInt(localCount) + 1 : 1050;
-                    localStorage.setItem('tarot_fallback_count', localCount);
-                    document.getElementById('visitorNum').innerText = localCount;
+                    // 備用防護：若雲端瞬斷，退回本地累加
+                    let fallback = localStorage.getItem('tarot_fb_count');
+                    fallback = fallback ? parseInt(fallback) + 1 : 1050;
+                    localStorage.setItem('tarot_fb_count', fallback);
+                    document.getElementById('visitorNum').innerText = fallback;
                 });
         });
 
@@ -335,7 +334,7 @@
             {no: 6, name: "戀人", en: "The Lovers", theme: "靈性核心與大局走勢", upright: "愛與結合、價值觀抉擇、人際和諧", reversed: "關係裂痕、價值觀衝突、錯誤決定、誘惑", file: "RWS1909_-_06_Lovers.jpeg"},
             {no: 7, name: "戰車", en: "The Chariot", theme: "靈性核心與大局走勢", upright: "意志力、克服障礙、掌控方向、決心前進", reversed: "失控暴衝、方向迷失、挫敗、攻擊性過強", file: "RWS1909_-_07_Chariot.jpeg"},
             {no: 8, name: "力量", en: "The Strength", theme: "靈性核心與大局走勢", upright: "內在勇氣、耐心包容、以柔克剛、自信", reversed: "自我懷疑、軟弱無力、情緒失控、暴力", file: "RWS1909_-_08_Strength.jpeg"},
-            {no: 9, name: "隱士", en: "The Hermit", theme: "靈性核心與大局走勢", upright: "內省探索、獨處沉澱、尋求真理、心靈指引", reversed: "孤立疏離、逃避現實、偏執盲目、寂寞", file: "RWS1909_-_09_Hermit.jpeg"},
+            {no: 9, name: "隱士", en: "The Hermit", theme: "靈性核心與大局走勢", upright: "內省探索、獨處沉澱/尋求真理、心靈指引", reversed: "孤立疏離、逃避現實、偏執盲目、寂寞", file: "RWS1909_-_09_Hermit.jpeg"},
             {no: 10, name: "命運之輪", en: "Wheel of Fortune", theme: "靈性核心與大局走勢", upright: "命運轉折、週期循環、幸運契機、不可抗力", reversed: "厄運連連、抗拒改變、週期停滯、意外挫折", file: "RWS1909_-_10_Wheel_of_Fortune.jpeg"},
             {no: 11, name: "正義", en: "Justice", theme: "靈性核心與大局走勢", upright: "公平正義、因果法則、客觀真相、明智裁決", reversed: "不公不義、偏見偏袒、逃避責任、法律糾紛", file: "RWS1909_-_11_Justice.jpeg"},
             {no: 12, name: "倒吊人", en: "The Hanged Man", theme: "靈性核心與大局走勢", upright: "換位思考、暫停放下、自我犧牲、獲得新視角", reversed: "無謂犧牲、停滯不前、抗拒放手、自怨自艾", file: "RWS1909_-_12_Hanged_Man.jpeg"},
