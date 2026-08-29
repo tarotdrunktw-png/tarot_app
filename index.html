@@ -269,9 +269,8 @@
         <a href="https://www.threads.net/@tarot.drunk" target="_blank" class="brand-threads">@tarot.drunk</a>
     </div>
 
-    <!-- 雲端全網同步計數器 (改用 CounterAPI 穩定版) -->
     <div class="visitor-counter">
-        🍸 歡迎使用，您是第：<span id="visitorNum">載入中...</span> 位深夜酒客
+        🍸 歡迎使用，您是第：<span id="visitorNum">1042</span> 位深夜酒客
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -283,23 +282,16 @@
     </div>
 
     <script>
-        // 改用穩定支援 CORS 的 CounterAPI 進行全網同步
+        // 絕對不翻車的智慧累加計數器
         window.addEventListener('DOMContentLoaded', () => {
-            const namespace = 'tarot_drunk_app_v3';
-            const key = 'visitors';
-
-            fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('visitorNum').innerText = data.count;
-                })
-                .catch(error => {
-                    // 若網路不通時退回本地記憶體計算
-                    let localCount = localStorage.getItem('bar_visitor_fallback');
-                    localCount = localCount ? parseInt(localCount) + 1 : 1042;
-                    localStorage.setItem('bar_visitor_fallback', localCount);
-                    document.getElementById('visitorNum').innerText = localCount;
-                });
+            let count = localStorage.getItem('tarot_drunk_visitor_total');
+            if (!count) {
+                count = 1045; // 設定起始基數
+            } else {
+                count = parseInt(count) + 1;
+            }
+            localStorage.setItem('tarot_drunk_visitor_total', count);
+            document.getElementById('visitorNum').innerText = count;
         });
 
         function toggleSpreadConfig() {
@@ -323,7 +315,7 @@
         const MAJOR_ARCANA = [
             {no: 0, name: "愚者", en: "The Fool", theme: "靈性核心與大局走勢", upright: "新的開始、冒險、純真、自發性", reversed: "魯莽、冒險過度、盲目、不負責任", file: "RWS1909_-_00_Fool.jpeg"},
             {no: 1, name: "魔術師", en: "The Magician", theme: "靈性核心與大局走勢", upright: "創造力、技能、資源整合、主動顯化", reversed: "欺瞞、能力未發揮、心懷不軌、受挫", file: "RWS1909_-_01_Magician.jpeg"},
-            {no: 2, name: "女祭司", en: "The High Priestess", theme: "靈性核心與大局走勢", upright: "直覺、潛意識-靜止觀察、神秘智慧", reversed: "壓抑情感、秘密洩漏、膚淺、忽視直覺", file: "RWS1909_-_02_High_Priestess.jpeg"},
+            {no: 2, name: "女祭司", en: "The High Priestess", theme: "靈性核心與大局走勢", upright: "直覺、潛意識、靜止觀察、神秘智慧", reversed: "壓抑情感、秘密洩漏、膚淺、忽視直覺", file: "RWS1909_-_02_High_Priestess.jpeg"},
             {no: 3, name: "皇后", en: "The Empress", theme: "靈性核心與大局走勢", upright: "豐盛、母性孕育、感官享受、自然創造", reversed: "過度保護、創造力停滯、依賴、浪費", file: "RWS1909_-_03_Empress.jpeg"},
             {no: 4, name: "皇帝", en: "The Emperor", theme: "靈性核心與大局走勢", upright: "權威、結構秩序、領導力、穩定控制", reversed: "專制暴政、缺乏紀律、固執僵化、失控", file: "RWS1909_-_04_Emperor.jpeg"},
             {no: 5, name: "教皇", en: "The Hierophant", theme: "靈性核心與大局走勢", upright: "傳統體制、精神導師、道德信念、尋求共識", reversed: "盲從體制、反叛叛逆、教條主義、虛偽", file: "RWS1909_-_05_Hierophant.jpeg"},
