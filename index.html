@@ -30,7 +30,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; }
         
-        /* 讓 HTML 與 Body 成為全螢幕基底，背景圖固定貼齊 */
         html, body {
             width: 100%;
             height: 100%;
@@ -47,7 +46,6 @@
             position: relative;
         }
 
-        /* 加上一層輕量的霧化暗色遮罩，確保底圖透出又不會太刺眼 */
         body::before {
             content: "";
             position: fixed;
@@ -61,7 +59,6 @@
             z-index: 0;
         }
 
-        /* 確保主排版容器絕對透明，不遮擋背景 */
         .app-layout {
             position: relative;
             z-index: 1;
@@ -329,6 +326,28 @@
         .branch-col { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; gap: 12px; -webkit-box-align: center; -ms-flex-align: center; align-items: center; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; min-width: 280px; }
         .branch-title { font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; text-align: center; }
 
+        /* 回到主頁面重新抽牌按鈕樣式 */
+        .reset-home-btn {
+            background: linear-gradient(135deg, #4338ca, #6366f1);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
+            transition: all 0.2s;
+            margin: 10px 0 20px 0;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        .reset-home-btn:hover {
+            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            transform: translateY(-2px);
+        }
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; -webkit-box-align: center; -ms-flex-align: center; align-items: center; z-index: 1000; padding: 16px; }
         .modal-content { background: #1a1c24; width: 100%; max-width: 500px; max-height: 85vh; border-radius: 8px; border: 1px solid #333a4f; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; overflow: hidden; padding: 16px; }
         .modal-header { font-size: 16px; font-weight: bold; color: #38bdf8; margin-bottom: 12px; text-align: center; }
@@ -503,6 +522,25 @@
             } else {
                 freeBox.style.display = "none";
             }
+        }
+
+        // 回到主頁面（重置畫面為歡迎首頁）
+        function resetToHome() {
+            let area = document.getElementById("spreadArea");
+            area.innerHTML = `
+                <div class="welcome-box">
+                    <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
+                    <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
+                    <div class="welcome-instructions">
+                        <div class="welcome-instructions-title">使用方式：</div>
+                        <div>1. 深呼吸三次，讓情緒平穩</div>
+                        <div>2. 閉上眼，在心中想好問題</div>
+                        <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「抽牌」</div>
+                    </div>
+                </div>
+            `;
+            // 將畫面上滾到最上方
+            document.querySelector(".workspace").scrollTop = 0;
         }
 
         function executeDraw() {
@@ -694,6 +732,7 @@
             html += '<div style="width:100%; max-width:450px;">';
             html += createCardBoxHtml(tCard, getLenoBatch(lenoPool, extCount), "【今日能量指引】 每日心靈核心與提醒");
             html += '</div>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
 
             area.innerHTML = html;
         }
@@ -725,6 +764,7 @@
             html += '</div>';
 
             html += '</div>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
 
             area.innerHTML = html;
         }
@@ -742,6 +782,7 @@
             html += '<div class="branch-col">' + createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【第二張·現在焦點】 當前處境與面臨核心") + '</div>';
             html += '<div class="branch-col">' + createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【第三張·未來趨勢】 依照現有軌跡發展") + '</div>';
             html += '</div>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
 
             area.innerHTML = html;
         }
@@ -770,6 +811,7 @@
             });
 
             html += '</div>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
             area.innerHTML = html;
         }
 
@@ -790,6 +832,7 @@
             });
 
             html += '</div>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌</button>';
             area.innerHTML = html;
         }
     </script>
