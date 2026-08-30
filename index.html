@@ -7,7 +7,7 @@
     <!-- 網頁分頁圖標 (Favicon) 設定 -->
     <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
 
-    <!-- 社群分享預覽標籤 (解決 IG / 聊天室預覽空白問題) -->
+    <!-- 社群分享預覽標籤 -->
     <meta property="og:title" content="醉酒塔羅 - 占卜系統">
     <meta property="og:description" content="偉特塔羅 × 雷諾曼 占卜系統，解析你的迷惘。">
     <meta property="og:image" content="https://tarotdrunktw-png.github.io/tarot_app/tarot_drunk.jpg">
@@ -17,7 +17,7 @@
     <style>
         :root {
             --bg-color: #0d0f14;
-            --panel-bg: rgba(21, 24, 33, 0.85);
+            --panel-bg: rgba(21, 24, 33, 0.9);
             --card-bg: rgba(26, 28, 36, 0.9);
             --inner-bg: rgba(19, 22, 31, 0.9);
             --tarot-bg: rgba(26, 30, 43, 0.9);
@@ -29,7 +29,7 @@
             --reversed: #f43f5e;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; }
         
         body {
             background-color: var(--bg-color);
@@ -38,7 +38,8 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            padding-bottom: 90px;
+            /* 預留底部固定計數器的空間，並兼容所有瀏覽器捲動 */
+            padding-bottom: 60px; 
             position: relative;
         }
 
@@ -53,13 +54,16 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            -webkit-filter: blur(8px) brightness(0.5);
             filter: blur(8px) brightness(0.5);
+            -webkit-transform: scale(1.1);
             transform: scale(1.1);
             z-index: -999;
         }
 
         .control-panel {
             background-color: var(--panel-bg);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             padding: 8px 6px;
             display: flex;
@@ -68,14 +72,22 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             gap: 6px;
             text-align: center;
+            width: 100%;
         }
         .title { font-size: 15px; font-weight: bold; color: #e4e6eb; width: 100%; }
         
         .control-row { 
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex; 
+            -webkit-box-align: center;
+            -ms-flex-align: center;
             align-items: center; 
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
             justify-content: center; 
             gap: 4px; 
+            -ms-flex-wrap: nowrap;
             flex-wrap: nowrap; 
             width: 100%;
             max-width: 100%;
@@ -90,6 +102,7 @@
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
+            -webkit-transition: background 0.2s;
             transition: background 0.2s;
             white-space: nowrap;
         }
@@ -103,6 +116,7 @@
             font-size: 11px; 
             height: 26px;
             border-radius: 3px;
+            -ms-flex-negative: 1;
             flex-shrink: 1; 
         }
         
@@ -111,29 +125,43 @@
             padding: 2px 6px; 
             border-radius: 4px; 
             border: 1px solid #33394d; 
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex; 
+            -webkit-box-align: center;
+            -ms-flex-align: center;
             align-items: center; 
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
             justify-content: center; 
             gap: 4px; 
             font-size: 11px; 
             color: #38bdf8; 
             white-space: nowrap;
+            -ms-flex-negative: 1;
             flex-shrink: 1;
             min-height: 28px;
             cursor: pointer;
         }
 
-        /* 靠上置中，可從 padding 調整上方間距 */
         .workspace { 
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
             flex: 1; 
-            padding: 20px 16px; 
+            padding: 20px 16px 40px 16px; 
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex; 
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
             justify-content: center; 
+            -webkit-box-align: start;
+            -ms-flex-align: start;
             align-items: flex-start; 
             overflow-y: auto; 
             width: 100%; 
         }
-        .spread-container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .spread-container { width: 100%; max-width: 1000px; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: center; -ms-flex-align: center; align-items: center; gap: 16px; }
 
         .welcome-box {
             text-align: center;
@@ -179,7 +207,12 @@
             background-color: var(--card-bg);
             border: 1px solid #2d3343;
             border-radius: 6px;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
             flex-direction: column;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
@@ -196,9 +229,18 @@
         .content {
             background-color: var(--inner-bg);
             padding: 8px;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
             flex: 1;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
             flex-direction: column;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
             justify-content: space-between;
         }
         .tarot-frame {
@@ -206,12 +248,19 @@
             border: 1px solid #252b3d;
             border-radius: 4px;
             padding: 8px;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
             flex-direction: column;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
             flex: 1;
         }
         .t-head { font-size: 12px; font-weight: bold; color: #a5b4fc; margin-bottom: 6px; }
-        .t-body { display: flex; gap: 10px; flex: 1; align-items: center; }
+        .t-body { display: -webkit-box; display: -ms-flexbox; display: flex; gap: 10px; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; -webkit-box-align: center; -ms-flex-align: center; align-items: center; }
         
         .card-img { 
             width: 70px; 
@@ -220,19 +269,22 @@
             border: 1px solid #000; 
             background: #1e2230; 
             border-radius: 4px; 
+            -ms-flex-negative: 0;
             flex-shrink: 0; 
+            -webkit-transition: -webkit-transform 0.3s ease;
             transition: transform 0.3s ease;
         }
         .card-img.reversed-img {
+            -webkit-transform: rotate(180deg);
             transform: rotate(180deg);
         }
 
-        .t-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+        .t-info { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; gap: 4px; }
         .card-name { font-size: 14px; font-weight: bold; color: var(--text-main); }
         .card-theme { font-size: 12px; color: var(--text-sub); }
         .interp-box { background: #242938; padding: 6px 8px; border-radius: 4px; font-size: 12px; color: #cbd5e1; margin-top: 2px; line-height: 1.4; }
 
-        .footer-frame { display: flex; justify-content: center; margin-top: 4px; }
+        .footer-frame { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; margin-top: 4px; }
         .orientation-badge { font-size: 12px; font-weight: bold; color: #fff; padding: 4px 12px; border-radius: 4px; }
         .bg-up { background-color: var(--upright); }
         .bg-rev { background-color: var(--reversed); }
@@ -241,15 +293,15 @@
         .leno-btn { background: #1e293b; color: #38bdf8; border: none; width: 100%; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 3px; cursor: pointer; }
         .leno-btn:hover { background: #334155; color: #fff; }
 
-        .branch-row { display: flex; width: 100%; justify-content: center; gap: 16px; flex-wrap: wrap; }
-        .branch-col { display: flex; flex-direction: column; gap: 12px; align-items: center; flex: 1; min-width: 280px; }
+        .branch-row { display: -webkit-box; display: -ms-flexbox; display: flex; width: 100%; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; gap: 16px; -ms-flex-wrap: wrap; flex-wrap: wrap; }
+        .branch-col { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; gap: 12px; -webkit-box-align: center; -ms-flex-align: center; align-items: center; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; min-width: 280px; }
         .branch-title { font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; text-align: center; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
-        .modal-content { background: #1a1c24; width: 100%; max-width: 500px; max-height: 85vh; border-radius: 8px; border: 1px solid #333a4f; display: flex; flex-direction: column; overflow: hidden; padding: 16px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; -webkit-box-align: center; -ms-flex-align: center; align-items: center; z-index: 1000; padding: 16px; }
+        .modal-content { background: #1a1c24; width: 100%; max-width: 500px; max-height: 85vh; border-radius: 8px; border: 1px solid #333a4f; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; overflow: hidden; padding: 16px; }
         .modal-header { font-size: 16px; font-weight: bold; color: #38bdf8; margin-bottom: 12px; text-align: center; }
-        .modal-body { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; }
-        .modal-card-item { background: #232736; border: 1px solid #2f364b; padding: 10px; border-radius: 6px; display: flex; gap: 12px; align-items: flex-start; }
+        .modal-body { overflow-y: auto; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; gap: 12px; padding-right: 4px; }
+        .modal-card-item { background: #232736; border: 1px solid #2f364b; padding: 10px; border-radius: 6px; display: -webkit-box; display: -ms-flexbox; display: flex; gap: 12px; -webkit-box-align: start; -ms-flex-align: start; align-items: flex-start; }
         .modal-close-btn { margin-top: 12px; background: var(--accent); color: #fff; padding: 10px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; text-align: center; font-size: 14px; }
 
         .brand-footer {
@@ -263,13 +315,20 @@
             font-size: 13px;
             z-index: 999;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
             flex-direction: column;
+            -webkit-box-align: end;
+            -ms-flex-align: end;
             align-items: flex-end;
             gap: 2px;
         }
         .brand-name { font-weight: bold; color: #38bdf8; letter-spacing: 0.5px; }
-        .brand-threads { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
+        .brand-threads { color: #94a3b8; text-decoration: none; -webkit-transition: color 0.2s; transition: color 0.2s; }
         .brand-threads:hover { color: #f8fafc; text-decoration: underline; }
 
         .visitor-counter-bar {
@@ -279,14 +338,21 @@
             width: 100%;
             background: rgba(13, 15, 20, 0.95);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(8px);
             backdrop-filter: blur(8px);
             padding: 10px 16px;
             text-align: center;
             font-size: 13px;
             color: #94a3b8;
             z-index: 998;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
             justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
             align-items: center;
         }
     </style>
