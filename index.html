@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>醉酒塔羅 - 占卜系統</title>
     <!-- 網頁分頁圖標 (Favicon) 設定 -->
     <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
@@ -31,15 +31,12 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; }
         
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
             background-color: var(--bg-color);
             color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            /* 預留底部固定計數器的空間，並兼容所有瀏覽器捲動 */
-            padding-bottom: 60px; 
+            overflow: hidden; /* 鎖死整個畫面不亂捲動，改由內部 workspace 捲動 */
             position: relative;
         }
 
@@ -61,18 +58,40 @@
             z-index: -999;
         }
 
+        /* 主容器：固定全螢幕上下分配，絕不產生多餘空白 */
+        .app-layout {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* 相容手機動態視窗高度 */
+        }
+
         .control-panel {
             background-color: var(--panel-bg);
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             padding: 8px 6px;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
             flex-direction: column;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
             align-items: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             gap: 6px;
             text-align: center;
             width: 100%;
+            z-index: 10;
         }
         .title { font-size: 15px; font-weight: bold; color: #e4e6eb; width: 100%; }
         
@@ -144,11 +163,12 @@
             cursor: pointer;
         }
 
+        /* 內容捲動區：精確填滿中間，滾動條完美貼齊底部計數器 */
         .workspace { 
             -webkit-box-flex: 1;
             -ms-flex: 1;
             flex: 1; 
-            padding: 20px 16px 40px 16px; 
+            padding: 20px 16px 80px 16px; /* 底部保留足夠空間給浮水印和計數器 */
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex; 
@@ -159,6 +179,7 @@
             -ms-flex-align: start;
             align-items: flex-start; 
             overflow-y: auto; 
+            -webkit-overflow-scrolling: touch;
             width: 100%; 
         }
         .spread-container { width: 100%; max-width: 1000px; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: center; -ms-flex-align: center; align-items: center; gap: 16px; }
@@ -336,13 +357,14 @@
             bottom: 0;
             left: 0;
             width: 100%;
+            height: 32px;
             background: rgba(13, 15, 20, 0.95);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             -webkit-backdrop-filter: blur(8px);
             backdrop-filter: blur(8px);
-            padding: 10px 16px;
+            padding: 0 16px;
             text-align: center;
-            font-size: 13px;
+            font-size: 12px;
             color: #94a3b8;
             z-index: 998;
             display: -webkit-box;
@@ -359,49 +381,51 @@
 </head>
 <body>
 
-    <div class="control-panel">
-        <div class="title">醉酒塔羅 🔮 偉特塔羅 × 雷諾曼 占卜系統</div>
-        <div class="control-row">
-            <div class="config-box">
-                <span>選擇牌陣:</span>
-                <select id="spreadSelect" onchange="toggleSpreadConfig()">
-                    <option value="diary">🃏 塔羅日記 (單張)</option>
-                    <option value="two">⚖️ 二擇一</option>
-                    <option value="triangle">🔺 聖三角</option>
-                    <option value="celtic5">✝️ 十字法 (五張)</option>
-                    <option value="free">🎲 無牌陣</option>
-                </select>
-            </div>
+    <div class="app-layout">
+        <div class="control-panel">
+            <div class="title">醉酒塔羅 🔮 偉特塔羅 × 雷諾曼 占卜系統</div>
+            <div class="control-row">
+                <div class="config-box">
+                    <span>選擇牌陣:</span>
+                    <select id="spreadSelect" onchange="toggleSpreadConfig()">
+                        <option value="diary">🃏 塔羅日記 (單張)</option>
+                        <option value="two">⚖️ 二擇一</option>
+                        <option value="triangle">🔺 聖三角</option>
+                        <option value="celtic5">✝️ 十字法 (五張)</option>
+                        <option value="free">🎲 無牌陣</option>
+                    </select>
+                </div>
 
-            <div class="config-box" id="freeConfigBox" style="display: none;" onclick="promptFreeCount()">
-                <span>張數:</span>
-                <span id="freeCountDisplay" style="color: #fff; font-weight: bold;">3</span>
-            </div>
+                <div class="config-box" id="freeConfigBox" style="display: none;" onclick="promptFreeCount()">
+                    <span>張數:</span>
+                    <span id="freeCountDisplay" style="color: #fff; font-weight: bold;">3</span>
+                </div>
 
-            <div class="config-box">
-                <span>雷諾曼:</span>
-                <select id="lenoCount">
-                    <option value="0" selected>0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
-            </div>
+                <div class="config-box">
+                    <span>雷諾曼:</span>
+                    <select id="lenoCount">
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
 
-            <button onclick="executeDraw()">✨ 抽牌</button>
+                <button onclick="executeDraw()">✨ 抽牌</button>
+            </div>
         </div>
-    </div>
 
-    <div class="workspace">
-        <div id="spreadArea" class="spread-container">
-            <div class="welcome-box">
-                <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
-                <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
-                <div class="welcome-instructions">
-                    <div class="welcome-instructions-title">使用方式：</div>
-                    <div>1. 深呼吸三次，讓情緒平穩</div>
-                    <div>2. 閉上眼，在心中想好問題</div>
-                    <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「抽牌」</div>
+        <div class="workspace">
+            <div id="spreadArea" class="spread-container">
+                <div class="welcome-box">
+                    <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
+                    <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
+                    <div class="welcome-instructions">
+                        <div class="welcome-instructions-title">使用方式：</div>
+                        <div>1. 深呼吸三次，讓情緒平穩</div>
+                        <div>2. 閉上眼，在心中想好問題</div>
+                        <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「抽牌」</div>
+                    </div>
                 </div>
             </div>
         </div>
