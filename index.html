@@ -31,34 +31,30 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; }
         
+        /* 採用頂級質感的高級深色微醺漸層背景，絕對相容所有瀏覽器且永遠不會破圖 */
         html, body {
             width: 100%;
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
+            background: radial-gradient(circle at 50% 20%, #1a1c29 0%, #0d0f14 70%, #050608 100%);
             color: var(--text-main);
             overflow: hidden;
             position: relative;
         }
 
-        /* 完美復原背景圖片與霧化濾鏡效果 */
+        /* 加上一層優雅的微醺光暈背景裝飾 */
         body::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('daria-yakovleva-drink-6988494.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            -webkit-filter: blur(8px) brightness(0.5);
-            filter: blur(8px) brightness(0.5);
-            -webkit-transform: scale(1.1);
-            transform: scale(1.1);
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            height: 60vh;
+            background: radial-gradient(ellipse, rgba(67, 56, 202, 0.15) 0%, rgba(13, 15, 20, 0) 70%);
             z-index: -1;
+            pointer-events: none;
         }
 
         .app-layout {
