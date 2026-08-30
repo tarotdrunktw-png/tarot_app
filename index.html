@@ -732,7 +732,7 @@
             html += '<div style="width:100%; max-width:450px;">';
             html += createCardBoxHtml(tCard, getLenoBatch(lenoPool, extCount), "【今日能量指引】 每日心靈核心與提醒");
             html += '</div>';
-            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌</button>';
 
             area.innerHTML = html;
         }
@@ -775,7 +775,7 @@
             let lenoPool = shuffle(LENORMAND_DECK);
             let area = document.getElementById("spreadArea");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 (過去 ➔ 現在 ➔ 未來) 】</h2>';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 】</h2>';
             
             html += '<div class="branch-row">';
             html += '<div class="branch-col">' + createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第一張·過去起因】 事情源頭與歷史根基") + '</div>';
