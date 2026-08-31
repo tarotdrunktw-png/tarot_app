@@ -333,14 +333,19 @@
         .leno-btn { background: #1e293b; color: #38bdf8; border: none; width: 100%; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 3px; cursor: pointer; }
         .leno-btn:hover { background: #334155; color: #fff; }
 
-        /* ── 牌陣幾何視覺化排版（無論手機電腦皆完美呈現牌陣陣列） ── */
-        .spread-visual-layout {
-            display: flex;
+        /* 僅手機版顯示的上方微縮牌面總覽 */
+        .mobile-preview-section {
+            display: none;
+            width: 100%;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            width: 100%;
-            margin-bottom: 8px;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        @media (max-width: 768px) {
+            .mobile-preview-section {
+                display: flex;
+            }
         }
 
         .preview-grid-auto {
@@ -351,38 +356,6 @@
             max-width: 500px;
             justify-content: center;
         }
-
-        /* 聖三角幾何呈現 (頂端1張，下方2張並排) */
-        .triangle-visual {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-        .triangle-row-bottom {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            width: 100%;
-        }
-
-        /* 十字法幾何呈現 (上、左、中、右、下 完美的十字十字架結構) */
-        .celtic-cross-visual {
-            display: grid;
-            grid-template-areas:
-                ". top ."
-                "left center right"
-                ". bottom .";
-            gap: 8px;
-            justify-content: center;
-            align-items: center;
-        }
-        .celtic-pos-0 { grid-area: center; } /* 現狀核心 */
-        .celtic-pos-1 { grid-area: left; }   /* 阻礙挑戰 */
-        .celtic-pos-2 { grid-area: top; }    /* 過去根基 */
-        .celtic-pos-3 { grid-area: right; }  /* 未來走向 */
-        .celtic-pos-4 { grid-area: bottom; } /* 最終結果 */
 
         .mini-card {
             background: var(--card-bg);
@@ -395,7 +368,6 @@
             text-align: center;
             gap: 4px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            width: 85px;
         }
         .mini-img {
             width: 55px;
@@ -412,16 +384,11 @@
             font-size: 9px;
             color: #38bdf8;
             font-weight: bold;
-            white-space: nowrap;
         }
         .mini-name {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: bold;
             color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
         }
 
         .details-list-box {
@@ -828,7 +795,7 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
-        // 建立單張微縮牌面 HTML（用於上方幾何陣列視覺化）
+        // 手機版專屬：建立微縮牌面 HTML
         function createMiniCardHtml(card, titleText) {
             let base = getBasePath();
             let imgPath = base + "rws1909/" + card.file;
@@ -842,21 +809,18 @@
             `;
         }
 
-        // 核心渲染：讓牌陣幾何排列同時呈現於手機與電腦版上方，下方接著詳細卡片
-        function renderVisualSpread(titleText, cards, titlesArray, layoutType, lenoPool, extCount) {
+        // 智慧響應式繪製：手機版顯示上方微縮牌面總覽，電腦版完全隱藏上方總覽、僅顯示下方標準詳細清單
+        function renderResponsiveSpread(titleText, cards, titlesArray, layoutType, lenoPool, extCount) {
             let container = document.getElementById("spreadArea");
             container.classList.add("is-wide");
 
-            let base = getBasePath();
             let html = `<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">${titleText}</h2>`;
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
-            // 上方：牌陣幾何視覺化排列（無論手機電腦皆忠實呈現陣列結構）
-            html += '<div class="spread-visual-layout">';
-            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌陣結構總覽 ──</div>';
-
+            // 僅手機版顯示：上方精美微縮牌面總覽
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
             if (layoutType === 'triangle') {
-                // 聖三角：上方1張，下方2張
                 html += '<div class="triangle-visual">';
                 html += createMiniCardHtml(cards[0], "1.過去");
                 html += '<div class="triangle-row-bottom">';
@@ -864,7 +828,6 @@
                 html += createMiniCardHtml(cards[2], "3.未來");
                 html += '</div></div>';
             } else if (layoutType === 'celtic5') {
-                // 十字法 (五張)：精確的十字架結構
                 html += '<div class="celtic-cross-visual">';
                 html += `<div class="celtic-pos-0">${createMiniCardHtml(cards[0], "1.現狀")}</div>`;
                 html += `<div class="celtic-pos-1">${createMiniCardHtml(cards[1], "2.阻礙")}</div>`;
@@ -873,43 +836,22 @@
                 html += `<div class="celtic-pos-4">${createMiniCardHtml(cards[4], "5.結果")}</div>`;
                 html += '</div>';
             } else {
-                // 其他類型（如日記、無牌陣、二擇一）：流暢排列
                 html += '<div class="preview-grid-auto">';
                 cards.forEach((card, idx) => {
                     html += createMiniCardHtml(card, `#${idx+1}`);
                 });
                 html += '</div>';
             }
-            html += '</div>'; // 結尾 spread-visual-layout
+            html += '</div>'; // 結尾 mobile-preview-section
 
-            // 下方：詳細牌意解析列表
+            // 下方：詳細牌意解析列表（電腦版直接完整呈現此區塊，不重複顯示上方圖案）
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
-            
-            if (layoutType === 'two') {
-                // 二擇一特殊分支排版
-                html += '<div style="width:100%; max-width:450px; margin-bottom:12px;">';
-                html += createCardBoxHtml(cards[0], getLenoBatch(lenoPool, extCount), titlesArray[0]);
-                html += '</div>';
-
-                html += '<div class="branch-row" style="width:100%; max-width:900px;">';
-                html += '<div class="branch-col"><div class="branch-title">── 選擇 A 路線 ──</div>';
-                html += createCardBoxHtml(cards[1], getLenoBatch(lenoPool, extCount), titlesArray[1]);
-                html += createCardBoxHtml(cards[2], getLenoBatch(lenoPool, extCount), titlesArray[2]);
-                html += '</div>';
-
-                html += '<div class="branch-col"><div class="branch-title">── 選擇 B 路線 ──</div>';
-                html += createCardBoxHtml(cards[3], getLenoBatch(lenoPool, extCount), titlesArray[3]);
-                html += createCardBoxHtml(cards[4], getLenoBatch(lenoPool, extCount), titlesArray[4]);
-                html += '</div></div>';
-            } else {
-                // 標準直線/列表解析
-                html += '<div class="details-list-box">';
-                cards.forEach((card, idx) => {
-                    let boxTitle = titlesArray ? titlesArray[idx] : `第 ${idx+1} 張牌`;
-                    html += createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), boxTitle);
-                });
-                html += '</div>';
-            }
+            html += '<div class="details-list-box">';
+            cards.forEach((card, idx) => {
+                let boxTitle = titlesArray ? titlesArray[idx] : `第 ${idx+1} 張牌`;
+                html += createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), boxTitle);
+            });
+            html += '</div>';
 
             html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
             html += '</div>';
@@ -937,8 +879,52 @@
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(5);
             let lenoPool = shuffle(LENORMAND_DECK);
+            let container = document.getElementById("spreadArea");
+            container.classList.add("is-wide");
+
             let titles = ["【現狀核心】", "【選擇 A · 過程】", "【選擇 A · 結果】", "【選擇 B · 過程】", "【選擇 B · 結果】"];
-            renderVisualSpread("【 ⚖️ 二 擇 一 抉 擇 牌 陣 】", tCards, titles, 'two', lenoPool, extCount);
+            
+            let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
+            html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
+            
+            // 僅手機版顯示的 5 張牌總覽
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
+            html += '<div class="preview-grid-auto">';
+            tCards.forEach((card, idx) => {
+                let base = getBasePath();
+                let imgPath = base + "rws1909/" + card.file;
+                let revClass = card.isReversed ? "reversed-mini" : "";
+                html += `
+                    <div class="mini-card">
+                        <div class="mini-title">#${idx+1}</div>
+                        <img src="${imgPath}" class="mini-img ${revClass}" onerror="this.style.display='none'">
+                        <div class="mini-name">${card.name}</div>
+                    </div>
+                `;
+            });
+            html += '</div></div>';
+
+            html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細路徑解析 ──</div>';
+            html += '<div style="width:100%; max-width:450px; margin-bottom:12px;">';
+            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
+            html += '</div>';
+
+            html += '<div class="branch-row" style="width:100%; max-width:900px;">';
+            html += '<div class="branch-col"><div class="branch-title">── 選擇 A 路線 ──</div>';
+            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
+            html += '</div>';
+
+            html += '<div class="branch-col"><div class="branch-title">── 選擇 B 路線 ──</div>';
+            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
+            html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
+            html += '</div></div>';
+
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
+            html += '</div>';
+
+            container.innerHTML = html;
         }
 
         function drawHolyTriangle() {
@@ -946,7 +932,7 @@
             let tCards = getRandomTarot(3);
             let lenoPool = shuffle(LENORMAND_DECK);
             let titles = ["【第一張·過去起因】", "【第二張·現在焦點】", "【第三張·未來趨勢】"];
-            renderVisualSpread("【 🔺 聖 三 角 牌 陣 】", tCards, titles, 'triangle', lenoPool, extCount);
+            renderResponsiveSpread("【 🔺 聖 三 角 牌 陣 】", tCards, titles, 'triangle', lenoPool, extCount);
         }
 
         function drawCeltic5() {
@@ -960,7 +946,7 @@
                 "【第四張·未來走向】",
                 "【第五張·最終結果】"
             ];
-            renderVisualSpread("【 ✝️ 十 字 法 牌 陣 (五張) 】", tCards, titles, 'celtic5', lenoPool, extCount);
+            renderResponsiveSpread("【 ✝️ 十 字 法 牌 陣 (五張) 】", tCards, titles, 'celtic5', lenoPool, extCount);
         }
 
         function drawFreeSpread() {
@@ -968,7 +954,7 @@
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(count);
             let lenoPool = shuffle(LENORMAND_DECK);
-            renderVisualSpread(`【 🎲 無 牌 陣（ ${count} 張） 】`, tCards, null, 'free', lenoPool, extCount);
+            renderResponsiveSpread(`【 🎲 無 牌 陣（ ${count} 張） 】`, tCards, null, 'free', lenoPool, extCount);
         }
     </script>
 </body>
