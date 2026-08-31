@@ -399,18 +399,22 @@
             justify-content: center;
         }
 
-        /* 十字法手機版縮圖幾何：第二張直立在第一張正上方 */
+        /* 十字法手機版縮圖幾何：十字架陣型網格 */
         .celtic-cross-visual-mobile {
-            position: relative;
-            width: 280px;
-            height: 310px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, auto);
+            gap: 8px;
+            width: 260px;
             margin: 5px auto;
+            justify-items: center;
+            align-items: center;
         }
-        .celtic-m-pos-0 { position: absolute; top: 110px; left: 105px; }
-        .celtic-m-pos-1 { position: absolute; top: 10px; left: 105px; }
-        .celtic-m-pos-2 { position: absolute; top: 110px; left: 15px; }
-        .celtic-m-pos-3 { position: absolute; top: 110px; left: 195px; }
-        .celtic-m-pos-4 { position: absolute; top: 210px; left: 105px; }
+        .celtic-m-pos-1 { grid-column: 2; grid-row: 1; }
+        .celtic-m-pos-2 { grid-column: 1; grid-row: 2; }
+        .celtic-m-pos-0 { grid-column: 2; grid-row: 2; }
+        .celtic-m-pos-3 { grid-column: 3; grid-row: 2; }
+        .celtic-m-pos-4 { grid-column: 2; grid-row: 3; }
 
         /* 二擇一手機版縮圖幾何 */
         .two-choices-visual-mobile {
@@ -965,13 +969,13 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
-            /* 手機版專屬牌面總覽：十字法幾何排版（第二張直立在第一張正上方） */
+            /* 手機版專屬牌面總覽：十字法幾何排版（網格十字陣型） */
             html += '<div class="mobile-preview-section">';
             html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
             html += '<div class="celtic-cross-visual-mobile">';
-            html += `<div class="celtic-m-pos-0">${createMiniCardHtml(tCards[0], "1.現狀")}</div>`;
             html += `<div class="celtic-m-pos-1">${createMiniCardHtml(tCards[1], "2.阻礙")}</div>`;
             html += `<div class="celtic-m-pos-2">${createMiniCardHtml(tCards[2], "3.過去")}</div>`;
+            html += `<div class="celtic-m-pos-0">${createMiniCardHtml(tCards[0], "1.現狀")}</div>`;
             html += `<div class="celtic-m-pos-3">${createMiniCardHtml(tCards[3], "4.未來")}</div>`;
             html += `<div class="celtic-m-pos-4">${createMiniCardHtml(tCards[4], "5.結果")}</div>`;
             html += '</div></div>';
