@@ -698,7 +698,7 @@
             {no: 28, name: "權杖七", en: "Seven of Wands", theme: "行動與熱情能量", upright: "捍衛立場、守衛權益、堅持到底、堅守陣地", reversed: "寡不敵眾、放棄堅持、動搖、壓力過大", file: "RWS1909_-_Wands07.jpeg"},
             {no: 29, name: "權杖八", en: "Eight of Wands", theme: "行動與熱情能量", upright: "快速進展、迅速訊息、事情明朗、飛行行動", reversed: "混亂、延誤、溝通不良、急躁誤事", file: "RWS1909_-_Wands08.jpeg"},
             {no: 30, name: "權杖九", en: "Nine of Wands", theme: "行動與熱情能量", upright: "堅持到底、防備狀態、歷經考驗、最後一關", reversed: "疲憊不堪、防備過度、放棄抵抗、心力交瘁", file: "RWS1909_-_Wands09.jpeg"},
-            {no: 31, name: "權杖十", en: "Ten of Wands", theme: "行動與熱情能量", upright: "沉重負擔、壓力超載、責任攬上身、過勞", "reversed": "卸下重擔、分擔壓力、不堪負荷、逃避責任", file: "RWS1909_-_Wands10.jpeg"},
+            {no: 31, name: "權杖十", en: "Ten of Wands", theme: "行動與熱情能量", upright: "沉重負擔、壓力超載、責任攬上身、過勞", reversed: "卸下重擔、分擔壓力、不堪負荷、逃避責任", file: "RWS1909_-_Wands10.jpeg"},
             {no: 32, name: "權杖侍者", en: "Page of Wands", theme: "行動與熱情能量", upright: "熱情新血、探索精神、好消息、大膽嘗試", reversed: "衝動魯莽、缺乏耐心、虎頭蛇尾、壞消息", file: "RWS1909_-_Wands11.jpeg"},
             {no: 33, name: "權杖騎士", en: "Knight of Wands", theme: "行動與熱情能量", upright: "熱血行動、冒險精神、充滿衝勁、旅行出發", reversed: "三分鐘熱度、脾氣暴躁、魯莽行事、計畫中斷", file: "RWS1909_-_Wands12.jpeg"},
             {no: 34, name: "權杖王后", en: "Queen of Wands", theme: "行動與熱情能量", upright: "自信迷人、熱情開朗、獨立自主、溫暖大方", reversed: "愛嫉妒、控制欲強、情緒化、自我中心", file: "RWS1909_-_Wands13.jpeg"},
@@ -1042,17 +1042,17 @@
             html += `<div class="celtic-m-pos-1">${createMiniCardHtml(tCards[1], "2.過去")}</div>`;
             html += `<div class="celtic-m-pos-0">${createMiniCardHtml(tCards[0], "1.現狀")}</div>`;
             html += `<div class="celtic-m-pos-2">${createMiniCardHtml(tCards[2], "3.未來")}</div>`;
-            html += `<div class="celtic-m-pos-4">${createMiniCardHtml(tCards[4], "5.阻礙")}</div>`;
+            html += `<div class="celtic-m-pos-4">${createMiniCardHtml(tCards[4], "5.根源")}</div>`;
             html += '</div></div>';
 
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
 
-            // 上方：理想、目標 (第4張) 置頂
+            // 上方：理想目標 (第4張) 置頂
             html += '<div style="width:100%; max-width:395px; margin-bottom:4px;">';
             html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
             html += '</div>';
 
-            // 中間層：左邊過去 (第2張)、中間現狀 (第1張)、右邊未來 (第3張) 並排
+            // 中間層：左邊過去影響 (第2張)、中間現狀核心 (第1張)、右邊未來走向 (第3張) 並排
             html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
             html += '<div class="branch-col" style="min-width: 395px;">';
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
