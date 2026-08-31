@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>醉酒塔羅 - 雷諾曼占卜系統</title>
-    <!-- 網頁分頁圖標 (Favicon) 設定 -->
     <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
 
-    <!-- 社群分享預覽標籤 -->
     <meta property="og:title" content="醉酒塔羅 - 雷諾曼占卜系統">
     <meta property="og:description" content="偉特塔羅 × 雷諾曼 占卜系統，解析你的迷惘。">
     <meta property="og:image" content="https://tarotdrunktw-png.github.io/tarot_app/tarot_drunk.jpg">
@@ -238,7 +236,7 @@
         /* 塔羅詳細卡片樣式 */
         .card-box {
             width: 100%;
-            max-width: 300px;
+            max-width: 320px;
             height: auto;
             min-height: 180px;
             background-color: var(--card-bg);
@@ -300,8 +298,8 @@
         .t-body { display: -webkit-box; display: -ms-flexbox; display: flex; gap: 8px; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; -webkit-box-align: center; -ms-flex-align: center; align-items: center; }
         
         .card-img { 
-            width: 50px; 
-            height: 82px; 
+            width: 55px; 
+            height: 90px; 
             object-fit: cover; 
             border: 1px solid #000; 
             background: #1e2230; 
@@ -317,9 +315,9 @@
         }
 
         .t-info { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; gap: 2px; }
-        .card-name { font-size: 11px; font-weight: bold; color: var(--text-main); }
+        .card-name { font-size: 12px; font-weight: bold; color: var(--text-main); }
         .card-theme { font-size: 10px; color: var(--text-sub); }
-        .interp-box { background: #242938; padding: 4px 6px; border-radius: 4px; font-size: 10px; color: #cbd5e1; margin-top: 2px; line-height: 1.3; }
+        .interp-box { background: #242938; padding: 4px 6px; border-radius: 4px; font-size: 11px; color: #cbd5e1; margin-top: 2px; line-height: 1.3; }
 
         .footer-frame { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; margin-top: 3px; }
         .orientation-badge { font-size: 10px; font-weight: bold; color: #fff; padding: 2px 8px; border-radius: 3px; }
@@ -327,7 +325,7 @@
         .bg-rev { background-color: var(--reversed); }
 
         .leno-bar { background: #161922; border: 1px solid #22293d; border-radius: 4px; padding: 3px; text-align: center; margin-top: 3px; }
-        .leno-btn { background: #1e293b; color: #38bdf8; border: none; width: 100%; padding: 4px; font-size: 10px; font-weight: bold; border-radius: 3px; cursor: pointer; }
+        .leno-btn { background: #1e293b; color: #38bdf8; border: none; width: 100%; padding: 4px; font-size: 11px; font-weight: bold; border-radius: 3px; cursor: pointer; }
         .leno-btn:hover { background: #334155; color: #fff; }
 
         /* ── 幾何牌陣佈局專用樣式 ── */
@@ -339,7 +337,7 @@
             width: 100%;
         }
 
-        /* 聖三角幾何呈現 (上 1 張過去，下 2 張現在與結果) */
+        /* 聖三角幾何呈現 (上1，下2) */
         .triangle-top {
             display: flex;
             justify-content: center;
@@ -353,12 +351,12 @@
             flex-wrap: wrap;
         }
 
-        /* 十字法幾何呈現 (上4、左2中1右3、下5) */
+        /* 十字法幾何呈現 (上、左、中、右、下) */
         .celtic-row {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 16px;
             width: 100%;
             flex-wrap: wrap;
         }
@@ -766,7 +764,7 @@
             let area = document.getElementById("spreadArea");
 
             let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🃏 單 張 塔 羅 日 記 】</h2>';
-            html += '<div style="width:100%; max-width:300px;">';
+            html += '<div style="width:100%; max-width:320px;">';
             html += createCardBoxHtml(tCard, getLenoBatch(lenoPool, extCount), "【今日能量指引】 每日心靈核心與提醒");
             html += '</div>';
             html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
@@ -819,14 +817,14 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 】</h2>';
             html += '<div class="spread-layout-grid">';
 
-            // 聖三角：上方 1 張過去起因，下方 2 張現在焦點、未來趨勢
+            // 聖三角幾何結構：上方 1 張 (未來/頂點)，下方 2 張 (過去、現在)
             html += '<div class="triangle-top">';
-            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第一張·過去起因】");
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【第三張·未來趨勢】");
             html += '</div>';
 
             html += '<div class="triangle-bottom">';
+            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第一張·過去起因】");
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【第二張·現在焦點】");
-            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【第三張·未來趨勢】");
             html += '</div>';
 
             html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
@@ -841,25 +839,25 @@
             let lenoPool = shuffle(LENORMAND_DECK);
             let area = document.getElementById("spreadArea");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ✝️ 五 張 小 十 字 牌 陣 】</h2>';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
             html += '<div class="spread-layout-grid">';
 
-            // 五張小十字結構：
-            // 上方 (第 4 張)：目標或潛意識
+            // 十字法幾何結構：
+            // 上方：第二張 (挑戰)
             html += '<div class="celtic-row">';
-            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), "【第 4 張】目標或潛意識");
+            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【第二張·阻礙挑戰】");
             html += '</div>';
 
-            // 中間列：左 (第 2 張) - 中 (第 1 張) - 右 (第 3 張)
-            html += '<div class="celtic-row" style="gap:6px;">';
-            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【第 2 張】過去或基礎");
-            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第 1 張】現況與核心");
-            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【第 3 張】未來或發展");
+            // 中間列：左 (第三張·過去) - 中 (第一張·現狀) - 右 (第四張·未來)
+            html += '<div class="celtic-row" style="gap:8px;">';
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【第三張·過去根基】");
+            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第一張·現狀核心】");
+            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), "【第四張·未來走向】");
             html += '</div>';
 
-            // 下方 (第 5 張)：阻礙或現實建議
+            // 下方：第五張 (結果)
             html += '<div class="celtic-row">';
-            html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), "【第 5 張】阻礙或現實建議");
+            html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), "【第五張·最終結果】");
             html += '</div>';
 
             html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
@@ -879,7 +877,7 @@
             html += '<div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;">';
             
             tCards.forEach(function(card, idx) {
-                html += '<div style="width:100%; max-width:300px;">';
+                html += '<div style="width:100%; max-width:320px;">';
                 html += createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), '第 ' + (idx+1) + ' 張牌（自由焦點）');
                 html += '</div>';
             });
