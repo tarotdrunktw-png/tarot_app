@@ -333,7 +333,21 @@
         .leno-btn { background: #1e293b; color: #38bdf8; border: none; width: 100%; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 3px; cursor: pointer; }
         .leno-btn:hover { background: #334155; color: #fff; }
 
-        /* ── 響應式手機版頂部預覽微縮牌面排版 ── */
+        /* 預設隱藏手機版專屬的上方微縮牌面，僅在手機寬度 (<=768px) 時顯示 */
+        .mobile-preview-section {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        @media (max-width: 768px) {
+            .mobile-preview-section {
+                display: flex;
+            }
+        }
+
         .preview-grid-auto {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
@@ -385,7 +399,6 @@
             max-width: 450px;
         }
 
-        /* 舊有分支排版容器 (二擇一專用) */
         .branch-row { display: flex; width: 100%; justify-content: center; gap: 16px; flex-wrap: wrap; }
         .branch-col { display: flex; flex-direction: column; gap: 12px; align-items: center; flex: 1; min-width: 280px; }
         .branch-title { font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; text-align: center; }
@@ -782,8 +795,8 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
-        // 抽取共用邏輯：建立上方的微縮牌面總覽與下方的詳細卡片列表
-        function renderSplitView(titleText, cards, titlesArray, lenoPool, extCount) {
+        // 核心渲染邏輯：透過手機與電腦版的自動切換，實現手機版顯示上方微縮總覽，電腦版直接顯示詳細卡片
+        function renderResponsiveSpread(titleText, cards, titlesArray, lenoPool, extCount) {
             let container = document.getElementById("spreadArea");
             container.classList.add("is-wide");
 
@@ -791,7 +804,9 @@
             let html = `<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">${titleText}</h2>`;
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
-            // 上方：精美微縮牌面總覽 (自動依數量適應排版)
+            // 僅手機版顯示：上方精美微縮牌面總覽
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
             html += '<div class="preview-grid-auto">';
             cards.forEach((card, idx) => {
                 let imgPath = base + "rws1909/" + card.file;
@@ -804,9 +819,9 @@
                     </div>
                 `;
             });
-            html += '</div>';
+            html += '</div></div>';
 
-            // 下方：詳細牌意解析列表
+            // 下方：詳細牌意解析列表（電腦版直接完整呈現此區塊，手機版則接在微縮牌面下方）
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             html += '<div class="details-list-box">';
             cards.forEach((card, idx) => {
@@ -832,7 +847,7 @@
             html += '<div style="width:100%; max-width:450px;">';
             html += createCardBoxHtml(tCard, getLenoBatch(lenoPool, extCount), "【今日能量指引】 每日心靈核心與提醒");
             html += '</div>';
-            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌</button>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
 
             container.innerHTML = html;
         }
@@ -849,7 +864,9 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
             
-            // 上方：5張牌總覽
+            // 僅手機版顯示的 5 張牌總覽
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
             html += '<div class="preview-grid-auto">';
             tCards.forEach((card, idx) => {
                 let base = getBasePath();
@@ -863,9 +880,8 @@
                     </div>
                 `;
             });
-            html += '</div>';
+            html += '</div></div>';
 
-            // 下方：保留原本的 A/B 分支檢視
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細路徑解析 ──</div>';
             html += '<div style="width:100%; max-width:450px; margin-bottom:12px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
@@ -882,7 +898,7 @@
             html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
             html += '</div></div>';
 
-            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌</button>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
             html += '</div>';
 
             container.innerHTML = html;
@@ -893,7 +909,7 @@
             let tCards = getRandomTarot(3);
             let lenoPool = shuffle(LENORMAND_DECK);
             let titles = ["【第一張·過去起因】", "【第二張·現在焦點】", "【第三張·未來趨勢】"];
-            renderSplitView("【 🔺 聖 三 角 牌 陣 】", tCards, titles, lenoPool, extCount);
+            renderResponsiveSpread("【 🔺 聖 三 角 牌 陣 】", tCards, titles, lenoPool, extCount);
         }
 
         function drawCeltic5() {
@@ -907,7 +923,7 @@
                 "【第四張·未來走向】",
                 "【第五張·最終結果】"
             ];
-            renderSplitView("【 ✝️ 十 字 法 牌 陣 (五張) 】", tCards, titles, lenoPool, extCount);
+            renderResponsiveSpread("【 ✝️ 十 字 法 牌 陣 (五張) 】", tCards, titles, lenoPool, extCount);
         }
 
         function drawFreeSpread() {
@@ -915,7 +931,7 @@
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(count);
             let lenoPool = shuffle(LENORMAND_DECK);
-            renderSplitView(`【 🎲 自 訂 無 牌 陣（ ${count} 張） 】`, tCards, null, lenoPool, extCount);
+            renderResponsiveSpread(`【 🎲 無 牌 陣（ ${count} 張） 】`, tCards, null, lenoPool, extCount);
         }
     </script>
 </body>
