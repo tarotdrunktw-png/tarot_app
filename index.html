@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>醉酒塔羅 - 占卜系統</title>
+    <title>醉酒塔羅 - 雷諾曼占卜系統</title>
     <!-- 網頁分頁圖標 (Favicon) 設定 -->
     <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
 
     <!-- 社群分享預覽標籤 -->
-    <meta property="og:title" content="醉酒塔羅 - 占卜系統">
+    <meta property="og:title" content="醉酒塔羅 - 雷諾曼占卜系統">
     <meta property="og:description" content="偉特塔羅 × 雷諾曼 占卜系統，解析你的迷惘。">
     <meta property="og:image" content="https://tarotdrunktw-png.github.io/tarot_app/tarot_drunk.jpg">
     <meta property="og:url" content="https://tarotdrunktw-png.github.io/tarot_app/">
@@ -185,7 +185,17 @@
             width: 100%; 
             background: transparent !important;
         }
-        .spread-container { width: 100%; max-width: 1000px; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: center; -ms-flex-align: center; align-items: center; gap: 16px; }
+        .spread-container { 
+            width: 100%; 
+            max-width: 500px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 16px; 
+        }
+        .spread-container.is-wide {
+            max-width: 1250px;
+        }
 
         .welcome-box {
             text-align: center;
@@ -228,11 +238,11 @@
             text-align: center;
         }
 
+        /* 塔羅詳細卡片樣式：寬度 395px、高度 238px */
         .card-box {
             width: 100%;
-            max-width: 450px;
-            height: auto;
-            min-height: 200px;
+            max-width: 395px;
+            min-height: 238px;
             background-color: var(--card-bg);
             border: 1px solid #2d3343;
             border-radius: 6px;
@@ -322,11 +332,10 @@
         .leno-btn { background: #1e293b; color: #38bdf8; border: none; width: 100%; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 3px; cursor: pointer; }
         .leno-btn:hover { background: #334155; color: #fff; }
 
-        .branch-row { display: -webkit-box; display: -ms-flexbox; display: flex; width: 100%; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; gap: 16px; -ms-flex-wrap: wrap; flex-wrap: wrap; }
-        .branch-col { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; gap: 12px; -webkit-box-align: center; -ms-flex-align: center; align-items: center; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; min-width: 280px; }
+        .branch-row { display: flex; width: 100%; justify-content: center; gap: 16px; flex-wrap: wrap; }
+        .branch-col { display: flex; flex-direction: column; gap: 12px; align-items: center; flex: 1; min-width: 395px; }
         .branch-title { font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; text-align: center; }
 
-        /* 回到主頁面重新抽牌按鈕樣式 */
         .reset-home-btn {
             background: linear-gradient(135deg, #4338ca, #6366f1);
             color: #fff;
@@ -338,7 +347,7 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
             transition: all 0.2s;
-            margin: 10px 0 20px 0;
+            margin: 10px auto;
             width: 100%;
             max-width: 450px;
             text-align: center;
@@ -497,12 +506,10 @@
         async function initCounter() {
             try {
                 let endpoint = 'https://abacus.jasoncameron.dev/get/tarotdrunktw-png.github.io/tarot-visits';
-                
                 if (!sessionStorage.getItem('counted')) {
                     endpoint = 'https://abacus.jasoncameron.dev/hit/tarotdrunktw-png.github.io/tarot-visits';
                     sessionStorage.setItem('counted', 'true');
                 }
-
                 let response = await fetch(endpoint);
                 let data = await response.json();
                 document.getElementById('visitorCount').textContent = `🍸 歡迎來到醉酒塔羅，您是第：${data.value} 位深夜酒客`;
@@ -524,10 +531,10 @@
             }
         }
 
-        // 回到主頁面（重置畫面為歡迎首頁）
         function resetToHome() {
-            let area = document.getElementById("spreadArea");
-            area.innerHTML = `
+            let container = document.getElementById("spreadArea");
+            container.classList.remove("is-wide");
+            container.innerHTML = `
                 <div class="welcome-box">
                     <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
                     <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
@@ -539,7 +546,6 @@
                     </div>
                 </div>
             `;
-            // 將畫面上滾到最上方
             document.querySelector(".workspace").scrollTop = 0;
         }
 
@@ -726,93 +732,136 @@
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCard = getRandomTarot(1)[0];
             let lenoPool = shuffle(LENORMAND_DECK);
-            let area = document.getElementById("spreadArea");
+            let container = document.getElementById("spreadArea");
+            container.classList.remove("is-wide");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🃏 單 張 塔 羅 日 記 】</h2>';
-            html += '<div style="width:100%; max-width:450px;">';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:8px; text-align:center;">【 🃏 單 張 塔 羅 日 記 】</h2>';
+            html += '<div style="width:100%; max-width:395px;">';
             html += createCardBoxHtml(tCard, getLenoBatch(lenoPool, extCount), "【今日能量指引】 每日心靈核心與提醒");
             html += '</div>';
-            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌</button>';
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
 
-            area.innerHTML = html;
+            container.innerHTML = html;
         }
 
         function drawTwoChoices() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(5);
             let lenoPool = shuffle(LENORMAND_DECK);
-            let area = document.getElementById("spreadArea");
+            let container = document.getElementById("spreadArea");
+            container.classList.add("is-wide");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
+            let titles = ["【現狀核心】", "【選擇 A · 過程】", "【選擇 A · 結果】", "【選擇 B · 過程】", "【選擇 B · 結果】"];
             
-            html += '<div style="margin-bottom:16px; width:100%; max-width:450px;">';
-            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【現狀核心】 當前處境與決策背景");
-            html += '</div>';
-
-            html += '<div class="branch-row">';
+            let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
+            html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
             
-            html += '<div class="branch-col">';
-            html += '<div class="branch-title">── 選擇 A 路線 ──</div>';
-            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【選擇 A · 過程】 經歷狀態與挑戰");
-            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【選擇 A · 結果】 最終結局與走向");
+            html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
+            html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
+            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
             html += '</div>';
 
-            html += '<div class="branch-col">';
-            html += '<div class="branch-title">── 選擇 B 路線 ──</div>';
-            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), "【選擇 B · 過程】 經歷狀態與挑戰");
-            html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), "【選擇 B · 結果】 最終結局與走向");
+            html += '<div class="branch-row" style="width:100%; max-width:900px;">';
+            html += '<div class="branch-col"><div class="branch-title">── 選擇 A 路線 ──</div>';
+            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
             html += '</div>';
 
-            html += '</div>';
+            html += '<div class="branch-col"><div class="branch-title">── 選擇 B 路線 ──</div>';
+            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
+            html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
+            html += '</div></div>';
+
             html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
+            html += '</div>';
 
-            area.innerHTML = html;
+            container.innerHTML = html;
         }
 
         function drawHolyTriangle() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(3);
             let lenoPool = shuffle(LENORMAND_DECK);
-            let area = document.getElementById("spreadArea");
+            let container = document.getElementById("spreadArea");
+            container.classList.add("is-wide");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🔺 聖 三 角 牌 陣 】</h2>';
+            let titles = ["【第一張·過去起因】", "【第二張·現在焦點】", "【第三張·未來趨勢】"];
+
+            let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 🔺 聖 三 角 牌 陣 】</h2>';
+            html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
+
+            html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             
-            html += '<div class="branch-row">';
-            html += '<div class="branch-col">' + createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), "【第一張·過去起因】 事情源頭與歷史根基") + '</div>';
-            html += '<div class="branch-col">' + createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), "【第二張·現在焦點】 當前處境與面臨核心") + '</div>';
-            html += '<div class="branch-col">' + createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), "【第三張·未來趨勢】 依照現有軌跡發展") + '</div>';
+            // 第一行：過去起因置頂
+            html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
+            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
             html += '</div>';
-            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
 
-            area.innerHTML = html;
+            // 第二行：現在焦點與未來趨勢並排
+            html += '<div class="branch-row" style="width:100%; max-width:900px;">';
+            html += '<div class="branch-col">';
+            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
+            html += '</div>';
+
+            html += '<div class="branch-col">';
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
+            html += '</div></div>';
+
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
+            html += '</div>';
+
+            container.innerHTML = html;
         }
 
         function drawCeltic5() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(5);
             let lenoPool = shuffle(LENORMAND_DECK);
-            let area = document.getElementById("spreadArea");
+            let container = document.getElementById("spreadArea");
+            container.classList.add("is-wide");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
-            html += '<div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;">';
-            
             let titles = [
-                "【第一張·現狀核心】 當前的心境與處境",
-                "【第二張·阻礙挑戰】 目前面臨的困難或考驗",
-                "【第三張·過去根基】 導致現狀的遠因或過去影響",
-                "【第四張·未來走向】 即將到來的發展趨勢",
-                "【第五張·最終結果】 事情的最終歸宿與指引"
+                "【第一張·現狀核心】",
+                "【第二張·阻礙挑戰】",
+                "【第三張·過去根基】",
+                "【第四張·未來走向】",
+                "【第五張·最終結果】"
             ];
 
-            tCards.forEach(function(card, idx) {
-                html += '<div style="width:100%; max-width:450px;">';
-                html += createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), titles[idx]);
-                html += '</div>';
-            });
+            let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
+            html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
+            html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
+
+            // 過去根基 (第3張) 置頂
+            html += '<div style="width:100%; max-width:395px; margin-bottom:4px;">';
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
             html += '</div>';
+
+            // 中間層：左邊阻礙 (第2張)、中間現狀 (第1張)、右邊未來 (第4張) 並排
+            html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
+            html += '<div class="branch-col" style="min-width: 395px;">';
+            html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
+            html += '</div>';
+
+            html += '<div class="branch-col" style="min-width: 395px;">';
+            html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
+            html += '</div>';
+
+            html += '<div class="branch-col" style="min-width: 395px;">';
+            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
+            html += '</div>';
+            html += '</div>';
+
+            // 最終結果 (第5張) 置底
+            html += '<div style="width:100%; max-width:395px; margin-top:4px;">';
+            html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
+            html += '</div>';
+
             html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
-            area.innerHTML = html;
+            html += '</div>';
+
+            container.innerHTML = html;
         }
 
         function drawFreeSpread() {
@@ -820,20 +869,25 @@
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCards = getRandomTarot(count);
             let lenoPool = shuffle(LENORMAND_DECK);
-            let area = document.getElementById("spreadArea");
+            let container = document.getElementById("spreadArea");
+            container.classList.add("is-wide");
 
-            let html = '<h2 style="color:#f8fafc; margin-bottom:12px; text-align:center;">【 🎲 無 牌 陣（ ' + count + ' 張） 】</h2>';
-            html += '<div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;">';
+            let html = `<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 🎲 無 牌 陣（ ${count} 張） 】</h2>`;
+            html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
+            html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             
-            tCards.forEach(function(card, idx) {
-                html += '<div style="width:100%; max-width:450px;">';
-                html += createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), '第 ' + (idx+1) + ' 張牌（自由焦點）');
+            html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
+            tCards.forEach((card, idx) => {
+                html += '<div class="branch-col" style="min-width: 395px;">';
+                html += createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), `第 ${idx+1} 張牌`);
                 html += '</div>';
             });
-
             html += '</div>';
-            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌</button>';
-            area.innerHTML = html;
+
+            html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
+            html += '</div>';
+
+            container.innerHTML = html;
         }
     </script>
 </body>
