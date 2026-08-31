@@ -194,7 +194,7 @@
             gap: 16px; 
         }
         .spread-container.is-wide {
-            max-width: 1100px;
+            max-width: 1250px;
         }
 
         .welcome-box {
@@ -238,11 +238,11 @@
             text-align: center;
         }
 
-        /* 塔羅詳細卡片樣式：統壹設定固定寬度與高度結構，確保大小一致 */
+        /* 塔羅詳細卡片樣式：寬度 395px、高度 238px */
         .card-box {
             width: 100%;
-            max-width: 330px;
-            min-height: 340px;
+            max-width: 395px;
+            min-height: 238px;
             background-color: var(--card-bg);
             border: 1px solid #2d3343;
             border-radius: 6px;
@@ -333,8 +333,29 @@
         .leno-btn:hover { background: #334155; color: #fff; }
 
         .branch-row { display: flex; width: 100%; justify-content: center; gap: 16px; flex-wrap: wrap; }
-        .branch-col { display: flex; flex-direction: column; gap: 12px; align-items: center; flex: 1; min-width: 280px; }
+        .branch-col { display: flex; flex-direction: column; gap: 12px; align-items: center; flex: 1; min-width: 395px; }
         .branch-title { font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; text-align: center; }
+
+        /* 手機專屬排版優化：僅在手機螢幕下套用視覺結構，確保電腦版完全不變 */
+        @media (max-width: 768px) {
+            .spread-container.is-wide {
+                max-width: 100% !important;
+            }
+            .branch-row {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 16px !important;
+            }
+            .branch-col {
+                min-width: 100% !important;
+                width: 100% !important;
+            }
+            .card-box {
+                max-width: 100% !important;
+                min-height: auto !important;
+            }
+            /* 讓手機版聖三角、十字法與二擇一的總覽或區塊呈現更直覺的流式結構 */
+        }
 
         .reset-home-btn {
             background: linear-gradient(135deg, #4338ca, #6366f1);
@@ -736,7 +757,7 @@
             container.classList.remove("is-wide");
 
             let html = '<h2 style="color:#f8fafc; margin-bottom:8px; text-align:center;">【 🃏 單 張 塔 羅 日 記 】</h2>';
-            html += '<div style="width:100%; max-width:450px;">';
+            html += '<div style="width:100%; max-width:395px;">';
             html += createCardBoxHtml(tCard, getLenoBatch(lenoPool, extCount), "【今日能量指引】 每日心靈核心與提醒");
             html += '</div>';
             html += '<button class="reset-home-btn" onclick="resetToHome()">🔄 重新抽牌 (回到主頁面)</button>';
@@ -757,7 +778,7 @@
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
             
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
-            html += '<div style="width:100%; max-width:330px; margin-bottom:12px;">';
+            html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
             html += '</div>';
 
@@ -793,7 +814,7 @@
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             
             // 第一行：過去起因置頂
-            html += '<div style="width:100%; max-width:330px; margin-bottom:12px;">';
+            html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
             html += '</div>';
 
@@ -834,27 +855,27 @@
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
 
             // 過去根基 (第3張) 置頂
-            html += '<div style="width:100%; max-width:330px; margin-bottom:4px;">';
+            html += '<div style="width:100%; max-width:395px; margin-bottom:4px;">';
             html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
             html += '</div>';
 
             // 中間層：左邊阻礙 (第2張)、中間現狀 (第1張)、右邊未來 (第4張) 並排
-            html += '<div class="branch-row" style="width:100%; max-width:1100px; gap: 16px;">';
-            html += '<div class="branch-col" style="min-width: 300px;">';
+            html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
+            html += '<div class="branch-col" style="min-width: 395px;">';
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
             html += '</div>';
 
-            html += '<div class="branch-col" style="min-width: 300px;">';
+            html += '<div class="branch-col" style="min-width: 395px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
             html += '</div>';
 
-            html += '<div class="branch-col" style="min-width: 300px;">';
+            html += '<div class="branch-col" style="min-width: 395px;">';
             html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
             html += '</div>';
             html += '</div>';
 
             // 最終結果 (第5張) 置底
-            html += '<div style="width:100%; max-width:330px; margin-top:4px;">';
+            html += '<div style="width:100%; max-width:395px; margin-top:4px;">';
             html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
             html += '</div>';
 
@@ -876,9 +897,9 @@
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             
-            html += '<div class="branch-row" style="width:100%; max-width:1100px; gap: 16px;">';
+            html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
             tCards.forEach((card, idx) => {
-                html += '<div class="branch-col" style="min-width: 300px;">';
+                html += '<div class="branch-col" style="min-width: 395px;">';
                 html += createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), `第 ${idx+1} 張牌`);
                 html += '</div>';
             });
