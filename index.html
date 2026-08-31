@@ -336,6 +336,107 @@
         .branch-col { display: flex; flex-direction: column; gap: 12px; align-items: center; flex: 1; min-width: 395px; }
         .branch-title { font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; text-align: center; }
 
+        /* 手機版牌陣縮圖專屬排版樣式 */
+        .mobile-preview-section {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        @media (max-width: 768px) {
+            .mobile-preview-section {
+                display: flex;
+            }
+        }
+
+        .mini-card {
+            background: var(--card-bg);
+            border: 1px solid #2d3343;
+            border-radius: 6px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        .mini-img {
+            width: 55px;
+            height: 90px;
+            object-fit: cover;
+            border: 1px solid #000;
+            border-radius: 4px;
+            background: #000;
+        }
+        .mini-img.reversed-mini {
+            transform: rotate(180deg);
+        }
+        .mini-title {
+            font-size: 9px;
+            color: #38bdf8;
+            font-weight: bold;
+        }
+        .mini-name {
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* 聖三角手機版縮圖幾何 */
+        .triangle-visual-mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .triangle-row-bottom-mobile {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* 十字法手機版縮圖幾何 */
+        .celtic-cross-visual-mobile {
+            position: relative;
+            width: 280px;
+            height: 200px;
+            margin: 5px auto;
+        }
+        .celtic-m-pos-0 { position: absolute; top: 50px; left: 105px; }
+        .celtic-m-pos-1 { position: absolute; top: 50px; left: 105px; transform: rotate(90deg) scale(0.9); opacity: 0.95; }
+        .celtic-m-pos-2 { position: absolute; top: 50px; left: 15px; }
+        .celtic-m-pos-3 { position: absolute; top: 50px; left: 195px; }
+        .celtic-m-pos-4 { position: absolute; top: 105px; left: 105px; }
+
+        /* 二擇一手機版縮圖幾何 */
+        .two-choices-visual-mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .two-choices-top-mobile {
+            display: flex;
+            justify-content: center;
+        }
+        .two-choices-branches-mobile {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            gap: 10px;
+        }
+        .two-choices-col-mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
         .reset-home-btn {
             background: linear-gradient(135deg, #4338ca, #6366f1);
             color: #fff;
@@ -728,6 +829,19 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
+        function createMiniCardHtml(card, titleText) {
+            let base = getBasePath();
+            let imgPath = base + "rws1909/" + card.file;
+            let revClass = card.isReversed ? "reversed-mini" : "";
+            return `
+                <div class="mini-card">
+                    <div class="mini-title">${titleText}</div>
+                    <img src="${imgPath}" class="mini-img ${revClass}" onerror="this.style.display='none'">
+                    <div class="mini-name">${card.name}</div>
+                </div>
+            `;
+        }
+
         function drawDailyDiary() {
             let extCount = parseInt(document.getElementById("lenoCount").value) || 0;
             let tCard = getRandomTarot(1)[0];
@@ -756,6 +870,16 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
             
+            /* 手機版專屬牌面總覽：二擇一幾何排版 */
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
+            html += '<div class="two-choices-visual-mobile">';
+            html += '<div class="two-choices-top-mobile">' + createMiniCardHtml(tCards[0], "1.現狀") + '</div>';
+            html += '<div class="two-choices-branches-mobile">';
+            html += '<div class="two-choices-col-mobile">' + createMiniCardHtml(tCards[1], "2.A過程") + createMiniCardHtml(tCards[2], "3.A結果") + '</div>';
+            html += '<div class="two-choices-col-mobile">' + createMiniCardHtml(tCards[3], "4.B過程") + createMiniCardHtml(tCards[4], "5.B結果") + '</div>';
+            html += '</div></div></div>';
+
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
@@ -789,6 +913,16 @@
 
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 🔺 聖 三 角 牌 陣 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
+
+            /* 手機版專屬牌面總覽：聖三角幾何排版 */
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
+            html += '<div class="triangle-visual-mobile">';
+            html += createMiniCardHtml(tCards[0], "1.過去");
+            html += '<div class="triangle-row-bottom-mobile">';
+            html += createMiniCardHtml(tCards[1], "2.現在");
+            html += createMiniCardHtml(tCards[2], "3.未來");
+            html += '</div></div></div>';
 
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             
@@ -830,6 +964,17 @@
 
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
+
+            /* 手機版專屬牌面總覽：十字法幾何排版 */
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
+            html += '<div class="celtic-cross-visual-mobile">';
+            html += `<div class="celtic-m-pos-0">${createMiniCardHtml(tCards[0], "1.現狀")}</div>`;
+            html += `<div class="celtic-m-pos-1">${createMiniCardHtml(tCards[1], "2.阻礙")}</div>`;
+            html += `<div class="celtic-m-pos-2">${createMiniCardHtml(tCards[2], "3.過去")}</div>`;
+            html += `<div class="celtic-m-pos-3">${createMiniCardHtml(tCards[3], "4.未來")}</div>`;
+            html += `<div class="celtic-m-pos-4">${createMiniCardHtml(tCards[4], "5.結果")}</div>`;
+            html += '</div></div>';
 
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
 
