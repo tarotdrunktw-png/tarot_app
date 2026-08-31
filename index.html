@@ -399,18 +399,18 @@
             justify-content: center;
         }
 
-        /* 十字法手機版縮圖幾何：調整間距避免重疊 */
+        /* 十字法手機版縮圖幾何：第二張直立在第一張正上方 */
         .celtic-cross-visual-mobile {
             position: relative;
             width: 280px;
-            height: 290px;
+            height: 310px;
             margin: 5px auto;
         }
-        .celtic-m-pos-0 { position: absolute; top: 90px; left: 105px; }
-        .celtic-m-pos-1 { position: absolute; top: 90px; left: 105px; transform: rotate(90deg) scale(0.9); opacity: 0.95; }
-        .celtic-m-pos-2 { position: absolute; top: 90px; left: 15px; }
-        .celtic-m-pos-3 { position: absolute; top: 90px; left: 195px; }
-        .celtic-m-pos-4 { position: absolute; top: 180px; left: 105px; }
+        .celtic-m-pos-0 { position: absolute; top: 110px; left: 105px; }
+        .celtic-m-pos-1 { position: absolute; top: 10px; left: 105px; }
+        .celtic-m-pos-2 { position: absolute; top: 110px; left: 15px; }
+        .celtic-m-pos-3 { position: absolute; top: 110px; left: 195px; }
+        .celtic-m-pos-4 { position: absolute; top: 210px; left: 105px; }
 
         /* 二擇一手機版縮圖幾何 */
         .two-choices-visual-mobile {
@@ -965,7 +965,7 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
-            /* 手機版專屬牌面總覽：十字法幾何排版（修正間距與上下定位，不影響其他牌陣） */
+            /* 手機版專屬牌面總覽：十字法幾何排版（第二張直立在第一張正上方） */
             html += '<div class="mobile-preview-section">';
             html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
             html += '<div class="celtic-cross-visual-mobile">';
