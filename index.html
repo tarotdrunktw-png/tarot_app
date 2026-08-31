@@ -410,10 +410,10 @@
             justify-items: center;
             align-items: center;
         }
-        .celtic-m-pos-1 { grid-column: 2; grid-row: 1; }
-        .celtic-m-pos-2 { grid-column: 1; grid-row: 2; }
+        .celtic-m-pos-3 { grid-column: 2; grid-row: 1; }
+        .celtic-m-pos-1 { grid-column: 1; grid-row: 2; }
         .celtic-m-pos-0 { grid-column: 2; grid-row: 2; }
-        .celtic-m-pos-3 { grid-column: 3; grid-row: 2; }
+        .celtic-m-pos-2 { grid-column: 3; grid-row: 2; }
         .celtic-m-pos-4 { grid-column: 2; grid-row: 3; }
 
         /* 二擇一手機版縮圖幾何 */
@@ -960,10 +960,10 @@
 
             let titles = [
                 "【第一張·現狀核心】",
-                "【第二張·阻礙挑戰】",
-                "【第三張·過去根基】",
-                "【第四張·未來走向】",
-                "【第五張·最終結果】"
+                "【第二張·過去影響】",
+                "【第三張·未來走向】",
+                "【第四張·理想目標】",
+                "【第五張·根源阻礙】"
             ];
 
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
@@ -973,21 +973,21 @@
             html += '<div class="mobile-preview-section">';
             html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
             html += '<div class="celtic-cross-visual-mobile">';
-            html += `<div class="celtic-m-pos-1">${createMiniCardHtml(tCards[1], "2.阻礙")}</div>`;
-            html += `<div class="celtic-m-pos-2">${createMiniCardHtml(tCards[2], "3.過去")}</div>`;
+            html += `<div class="celtic-m-pos-3">${createMiniCardHtml(tCards[3], "4.理想")}</div>`;
+            html += `<div class="celtic-m-pos-1">${createMiniCardHtml(tCards[1], "2.過去")}</div>`;
             html += `<div class="celtic-m-pos-0">${createMiniCardHtml(tCards[0], "1.現狀")}</div>`;
-            html += `<div class="celtic-m-pos-3">${createMiniCardHtml(tCards[3], "4.未來")}</div>`;
-            html += `<div class="celtic-m-pos-4">${createMiniCardHtml(tCards[4], "5.結果")}</div>`;
+            html += `<div class="celtic-m-pos-2">${createMiniCardHtml(tCards[2], "3.未來")}</div>`;
+            html += `<div class="celtic-m-pos-4">${createMiniCardHtml(tCards[4], "5.根源")}</div>`;
             html += '</div></div>';
 
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
 
-            // 過去根基 (第3張) 置頂
+            // 上方：理想、目標 (第4張) 置頂
             html += '<div style="width:100%; max-width:395px; margin-bottom:4px;">';
-            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
+            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
             html += '</div>';
 
-            // 中間層：左邊阻礙 (第2張)、中間現狀 (第1張)、右邊未來 (第4張) 並排
+            // 中間層：左邊過去 (第2張)、中間現狀 (第1張)、右邊未來 (第3張) 並排
             html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
             html += '<div class="branch-col" style="min-width: 395px;">';
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
@@ -998,11 +998,11 @@
             html += '</div>';
 
             html += '<div class="branch-col" style="min-width: 395px;">';
-            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
             html += '</div>';
             html += '</div>';
 
-            // 最終結果 (第5張) 置底
+            // 下方：根源阻礙 (第5張) 置底
             html += '<div style="width:100%; max-width:395px; margin-top:4px;">';
             html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
             html += '</div>';
