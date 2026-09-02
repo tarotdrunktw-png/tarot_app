@@ -195,6 +195,10 @@
             flex-direction: column; 
             align-items: center; 
             gap: 16px; 
+            position: relative;
+            overflow: hidden;
+            height: auto;
+            padding-bottom: 10px;
         }
         .spread-container.is-wide {
             max-width: 1250px;
@@ -449,8 +453,9 @@
             gap: 10px;
             width: 100%;
             max-width: 450px;
-            margin: 10px auto 20px auto;
+            margin: 10px auto 10px auto;
             justify-content: center;
+            z-index: 100;
         }
 
         .action-btn {
@@ -479,6 +484,29 @@
         }
         .action-btn:hover {
             transform: translateY(-2px);
+        }
+
+        /* 密集交錯斜向浮水印網格層 (適用於所有牌陣與單張) */
+        .screenshot-watermark-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 150px; /* 緊密交錯間距 */
+            align-items: center;
+            justify-items: center;
+            opacity: 0.10; /* 極淡化設計，不干擾文字辨識 */
+        }
+        .watermark-item {
+            font-size: 15px;
+            color: #38bdf8;
+            font-weight: bold;
+            transform: rotate(-30deg);
+            white-space: nowrap;
+            user-select: none;
         }
 
         /* 手機截圖彈窗預覽樣式 */
@@ -721,12 +749,12 @@
             else if (spreadVal === "free") drawFreeSpread();
         }
 
-        const MAJOR_ARCANA = [
+        const TAROT_DECK = [
             {no: 0, name: "愚者", en: "The Fool", theme: "靈性核心與大局走勢", upright: "新的開始、冒險、純真、自發性", reversed: "魯莽、冒險過度、盲目、不負責任", file: "RWS1909_-_00_Fool.jpeg"},
             {no: 1, name: "魔術師", en: "The Magician", theme: "靈性核心與大局走勢", upright: "創造力、技能、資源整合、主動顯化", reversed: "欺瞞、能力未發揮、心懷不軌、受挫", file: "RWS1909_-_01_Magician.jpeg"},
             {no: 2, name: "女祭司", en: "The High Priestess", theme: "靈性核心與大局走勢", upright: "直覺、潛意識、靜止觀察、神秘智慧", reversed: "壓抑情感、秘密洩漏、膚淺、忽視直覺", file: "RWS1909_-_02_High_Priestess.jpeg"},
             {no: 3, name: "皇后", en: "The Empress", theme: "靈性核心與大局走勢", upright: "豐盛、母性孕育、感官享受、自然創造", reversed: "過度保護、創造力停滯、依賴、浪費", file: "RWS1909_-_03_Empress.jpeg"},
-            {no: 4, name: "皇帝", en: "The Emperor", theme: "靈性核心與大局走勢", upright: "權威, 結構秩序, 領導力、穩定控制", reversed: "專制暴政、缺乏紀律、固執僵化、失控", file: "RWS1909_-_04_Emperor.jpeg"},
+            {no: 4, name: "皇帝", en: "The Emperor", theme: "靈性核心與大局走勢", upright: "權威、結構秩序, 領導力、穩定控制", reversed: "專制暴政、缺乏紀律、固執僵化、失控", file: "RWS1909_-_04_Emperor.jpeg"},
             {no: 5, name: "教皇", en: "The Hierophant", theme: "靈性核心與大局走勢", upright: "傳統體制、精神導師、道德信念、尋求共識", reversed: "盲從體制、反叛叛逆、教條主義、虛偽", file: "RWS1909_-_05_Hierophant.jpeg"},
             {no: 6, name: "戀人", en: "The Lovers", theme: "靈性核心與大局走勢", upright: "愛與結合、價值觀抉擇、人際和諧", reversed: "關係裂痕、價值觀衝突、錯誤決定、誘惑", file: "RWS1909_-_06_Lovers.jpeg"},
             {no: 7, name: "戰車", en: "The Chariot", theme: "靈性核心與大局走勢", upright: "意志力、克服障礙、掌控方向、決心前進", reversed: "失控暴衝、方向迷失、挫敗、攻擊性過強", file: "RWS1909_-_07_Chariot.jpeg"},
@@ -743,7 +771,67 @@
             {no: 18, name: "月亮", en: "The Moon", theme: "靈性核心與大局走勢", upright: "潛在恐懼、幻象焦慮/直覺波動、模糊不明", reversed: "迷霧消散、看清真相、釋放恐懼、情緒平復", file: "RWS1909_-_18_Moon.jpeg"},
             {no: 19, name: "太陽", en: "The Sun", theme: "靈性核心與大局走勢", upright: "成功喜悅、活力充沛、真理顯明、自信光明", reversed: "暫時低落、過度樂觀、虛榮自滿、延遲成功", file: "RWS1909_-_19_Sun.jpeg"},
             {no: 20, name: "審判", en: "The Judgement", theme: "靈性核心與大局走勢", upright: "生命召喚、重大覺醒、清算重獲新生、明智抉擇", reversed: "自我懷疑、逃避召喚、重複犯錯、悔恨內疚", file: "RWS1909_-_20_Judgement.jpeg"},
-            {no: 21, name: "世界", en: "The World", theme: "靈性核心與大局走勢", upright: "圓滿達成、階段完成、完整合一、展翅高飛", reversed: "未竟之志、延宕拖延、缺乏收尾、受限束縛", file: "RWS1909_-_21_World.jpeg"}
+            {no: 21, name: "世界", en: "The World", theme: "靈性核心與大局走勢", upright: "圓滿達成、階段完成、完整合一、展翅高飛", reversed: "未竟之志、延宕拖延、缺乏收尾、受限束縛", file: "RWS1909_-_21_World.jpeg"},
+
+            {no: 22, name: "權杖一", en: "Ace of Wands", theme: "行動與熱情能量", upright: "新機會、強大動力、創造力爆發、熱情", reversed: "缺乏熱情、計畫延誤、動力不足、錯失良機", file: "RWS1909_-_Wands_01.jpeg"},
+            {no: 23, name: "權杖二", en: "Two of Wands", theme: "行動與熱情能量", upright: "未來規劃、決策時刻、遠見、掌控全局", reversed: "懼怕未知、計畫趕不上變化、缺乏遠見", file: "RWS1909_-_Wands_02.jpeg"},
+            {no: 24, name: "權杖三", en: "Three of Wands", theme: "行動與熱情能量", upright: "業務擴展、海外發展、遠見實現、合作契機", reversed: "延誤、期望落空、障礙增加、缺乏進展", file: "RWS1909_-_Wands_03.jpeg"},
+            {no: 25, name: "權杖四", en: "Four of Wands", theme: "行動與熱情能量", upright: "安居樂業、慶祝、婚禮、社群同樂、穩定", reversed: "家庭不和、慶典延期、缺乏安全感、短暫歡樂", file: "RWS1909_-_Wands_04.jpeg"},
+            {no: 26, name: "權杖五", en: "Five of Wands", theme: "行動與熱情能量", upright: "競爭、意見衝突、摩擦、群體挑戰", reversed: "達成共識、避免爭端、內部和解、暫時休戰", file: "RWS1909_-_Wands_05.jpeg"},
+            {no: 27, name: "權杖六", en: "Six of Wands", theme: "行動與熱情能量", upright: "勝利、凱旋歸來、受到肯定、自信提升", reversed: "驕傲自滿、勝利短暫、遭遇挫敗、信心受創", file: "RWS1909_-_Wands_06.jpeg"},
+            {no: 28, name: "權杖七", en: "Seven of Wands", theme: "行動與熱情能量", upright: "捍衛立場、守衛權益、堅持到底、堅守陣地", reversed: "寡不敵眾、放棄堅持、動搖、壓力過大", file: "RWS1909_-_Wands_07.jpeg"},
+            {no: 29, name: "權杖八", en: "Eight of Wands", theme: "行動與熱情能量", upright: "快速進展、迅速訊息、事情明朗、飛行行動", reversed: "混亂、延誤、溝通不良、急躁誤事", file: "RWS1909_-_Wands_08.jpeg"},
+            {no: 30, name: "權杖九", en: "Nine of Wands", theme: "行動與熱情能量", upright: "堅持到底、防備狀態、歷經考驗、最後一關", reversed: "疲憊不堪、防備過度、放棄抵抗、心力交瘁", file: "RWS1909_-_Wands_09.jpeg"},
+            {no: 31, name: "權杖十", en: "Ten of Wands", theme: "行動與熱情能量", upright: "沉重負擔、壓力超載、責任攬上身、過勞", reversed: "卸下重擔、分擔壓力、不堪負荷、逃避責任", file: "RWS1909_-_Wands_10.jpeg"},
+            {no: 32, name: "權杖侍者", en: "Page of Wands", theme: "行動與熱情能量", upright: "熱情新血、探索精神、好消息、大膽嘗試", reversed: "衝動魯莽、缺乏耐心、虎頭蛇尾、壞消息", file: "RWS1909_-_Wands_11.jpeg"},
+            {no: 33, name: "權杖騎士", en: "Knight of Wands", theme: "行動與熱情能量", upright: "熱血行動、冒險精神、充滿衝勁、旅行出發", reversed: "三分鐘熱度、脾氣暴躁、魯莽行事、計畫中斷", file: "RWS1909_-_Wands_12.jpeg"},
+            {no: 34, name: "權杖王后", en: "Queen of Wands", theme: "行動與熱情能量", upright: "自信迷人、熱情開朗、獨立自主、溫暖大方", reversed: "愛嫉妒、控制欲強、情緒化、自我中心", file: "RWS1909_-_Wands_13.jpeg"},
+            {no: 35, name: "權杖國王", en: "King of Wands", theme: "行動與熱情能量", upright: "遠見領袖、行動力、創業家精神、宏觀大局", reversed: "獨裁專斷、急躁盲目、濫用權力、缺乏包容", file: "RWS1909_-_Wands_14.jpeg"},
+
+            {no: 36, name: "聖杯一", en: "Ace of Cups", theme: "情感與人際關係", upright: "滿溢的情感、新戀情、心靈滿足、慈悲", reversed: "情感壓抑、空虛、心靈受創、自我封閉", file: "RWS1909_-_Cups_01.jpeg"},
+            {no: 37, name: "聖杯二", en: "Two of Cups", theme: "情感與人際關係", upright: "心靈契合、雙向奔赴、夥伴關係、愛的連結", reversed: "關係失和、意見分歧、溝通破裂、不平等對待", file: "RWS1909_-_Cups_02.jpeg"},
+            {no: 38, name: "聖杯三", en: "Three of Cups", theme: "情感與人際關係", upright: "歡聚慶祝、社交聚會、友誼長存、豐盛喜悅", reversed: "過度縱情、社交疲勞、背叛、小圈子排擠", file: "RWS1909_-_Cups_03.jpeg"},
+            {no: 39, name: "聖杯四", en: "Four of Cups", theme: "情感與人際關係", upright: "冷漠厭倦、內省沉思、無視機會、孤僻", reversed: "重新振作、接受新契機、走出陰霾、覺醒", file: "RWS1909_-_Cups_04.jpeg"},
+            {no: 40, name: "聖杯五", en: "Five of Cups", theme: "情感與人際關係", upright: "悲傷失落、緬懷過去、懊悔、情感創傷", reversed: "走出陰影、重新接受、釋懷、看見希望", file: "RWS1909_-_Cups_05.jpeg"},
+            {no: 41, name: "聖杯六", en: "Six of Cups", theme: "情感與人際關係", upright: "童心未泯、美好回憶、舊人重逢、純真善良", reversed: "困在過去、不願長大、過度懷舊、現實逃避", file: "RWS1909_-_Cups_06.jpeg"},
+            {no: 42, name: "聖杯七", en: "Seven of Cups", theme: "情感與人際關係", upright: "幻想過多、選擇障礙、白日夢、迷失方向", reversed: "認清現實、做出實際抉擇、破除幻想", file: "RWS1909_-_Cups_07.jpeg"},
+            {no: 43, name: "聖杯八", en: "Eight of Cups", theme: "情感與人際關係", upright: "急流勇退、追尋更高意義、放棄不適合的環境", reversed: "拖泥帶水、害怕改變、半途而廢、迷茫徘徊", file: "RWS1909_-_Cups_08.jpeg"},
+            {no: 44, name: "聖杯九", en: "Nine of Cups", theme: "情感與人際關係", upright: "願望成真、心靈滿足、享受成果、幸福快樂", reversed: "過度自滿、貪婪、物質主義、虛榮快樂", file: "RWS1909_-_Cups_09.jpeg"},
+            {no: 45, name: "聖杯十", en: "Ten of Cups", theme: "情感與人際關係", upright: "家庭圓滿、終極幸福、情感大融合、愛與和平", reversed: "家庭裂痕、虛偽和諧、幸福破滅、溝通不良", file: "RWS1909_-_Cups_10.jpeg"},
+            {no: 46, name: "聖杯侍者", en: "Page of Cups", theme: "情感與人際關係", upright: "情感表達、浪漫驚喜、直覺靈感、純真告白", reversed: "情感幼稚、情緒勒索、不切實際、幻想過度", file: "RWS1909_-_Cups_11.jpeg"},
+            {no: 47, name: "聖杯騎士", en: "Knight of Cups", theme: "情感與人際關係", upright: "浪漫追求、溫柔體貼、求婚邀請、感性使者", reversed: "花言巧語、多情不專、情緒化、逃避現實", file: "RWS1909_-_Cups_12.jpeg"},
+            {no: 48, name: "聖杯王后", en: "Queen of Cups", theme: "情感與人際關係", upright: "慈悲包容、直覺敏銳、同理心、深情溫柔", reversed: "情緒過度敏感、過度依賴、自我犧牲、多疑", file: "RWS1909_-_Cups_13.jpeg"},
+            {no: 49, name: "聖杯國王", en: "King of Cups", theme: "情感與人際關係", upright: "情緒成熟、溫和包容、智慧指引、外交風範", reversed: "冷酷無情、情緒操縱、壓抑情感、內心陰暗", file: "RWS1909_-_Cups_14.jpeg"},
+
+            {no: 50, name: "寶劍一", en: "Ace of Swords", theme: "理性思維與溝通", upright: "清晰思路、突破性洞察、真相大白、決斷力", reversed: "思維混亂、錯誤決定、殘酷言語、陰謀算計", file: "RWS1909_-_Swords_01.jpeg"},
+            {no: 51, name: "寶劍二", en: "Two of Swords", theme: "理性思維與溝通", upright: "陷入僵局、兩難抉擇、逃避現實、封閉內心", reversed: "被迫做決定、真相浮現、打破僵局、解除防備", file: "RWS1909_-_Swords_02.jpeg"},
+            {no: 52, name: "寶劍三", en: "Three of Swords", theme: "理性思維與溝通", upright: "心碎痛苦、背叛打擊、悲傷眼淚、情感分離", reversed: "傷口癒合、走出痛苦、原諒釋懷、逐漸恢復", file: "RWS1909_-_Swords_03.jpeg"},
+            {no: 53, name: "寶劍四", en: "Four of Swords", theme: "理性思維與溝通", upright: "休養生息、閉關沉澱、暫停休息、恢復元氣", reversed: "過勞、無法休息、焦慮失眠、精神衰弱", file: "RWS1909_-_Swords_04.jpeg"},
+            {no: 54, name: "寶劍五", en: "Five of Swords", theme: "理性思維與溝通", upright: "不擇手段的勝利、衝突、自私、兩敗俱傷", reversed: "化解敵意、尋求和解、反省、放下爭端", file: "RWS1909_-_Swords_05.jpeg"},
+            {no: 55, name: "寶劍六", en: "Six of Swords", theme: "理性思維與溝通", upright: "平穩渡過難關、療傷止痛的旅行、離開困境", reversed: "逃避問題、難以抽離、滯留原地、舊傷復發", file: "RWS1909_-_Swords_06.jpeg"},
+            {no: 56, name: "寶劍七", en: "Seven of Swords", theme: "理性思維與溝通", upright: "小聰明、策略謀劃、隱瞞欺騙、偷偷摸摸", reversed: "真相敗露、誠實面對、良心不安、計畫失敗", file: "RWS1909_-_Swords_07.jpeg"},
+            {no: 57, name: "寶劍八", en: "Eight of Swords", theme: "理性思維與溝通", upright: "自我束縛、被害妄想、動彈不得、無力感", reversed: "突破盲點、重獲自由、自我解放、看清現實", file: "RWS1909_-_Swords_08.jpeg"},
+            {no: 58, name: "寶劍九", en: "Nine of Swords", theme: "理性思維與溝通", upright: "極度焦慮、噩夢、精神折磨、夜長夢多", reversed: "放下焦慮、迎來曙光、心理輔導、逐漸安心", file: "RWS1909_-_Swords_09.jpeg"},
+            {no: 59, name: "寶劍十", en: "Ten of Swords", theme: "理性思維與溝通", upright: "慘痛失敗、谷底、徹底結束、背叛重擊", reversed: "絕處逢生、復甦、一縷曙光、最糟情況已過", file: "RWS1909_-_Swords_10.jpeg"},
+            {no: 60, name: "寶劍侍者", en: "Page of Swords", theme: "理性思維與溝通", upright: "好奇心、警惕、探求真相、敏銳觀察", reversed: "八卦流言、口無遮攔、心懷不軌、刺探隱私", file: "RWS1909_-_Swords_11.jpeg"},
+            {no: 61, name: "寶劍騎士", en: "Knight of Swords", theme: "理性思維與溝通", upright: "迅雷不及掩耳的行動、強勢直言、追求效率", reversed: "魯莽尖銳、言語傷人、急躁冒進、衝突不斷", file: "RWS1909_-_Swords_12.jpeg"},
+            {no: 62, name: "寶劍王后", en: "Queen of Swords", theme: "理性思維與溝通", upright: "理性客觀、思路清晰、獨立自主、公正不阿", reversed: "冷酷嚴苛、尖酸刻薄、過度批判、孤僻", file: "RWS1909_-_Swords_13.jpeg"},
+            {no: 63, name: "寶劍國王", en: "King of Swords", theme: "理性思維與溝通", upright: "絕對權威、理智分析、法律公正、高瞻遠矚", reversed: "濫用權力、鐵石心腸、專制獨裁、冷血無情", file: "RWS1909_-_Swords_14.jpeg"},
+
+            {no: 64, name: "錢幣一", en: "Ace of Pentacles", theme: "物質財富與工作", upright: "實際財富、全新工作機會、物質豐盛、根基", reversed: "財運不佳、投資失利、錯失良機、基礎不穩", file: "RWS1909_-_Pentacles_01.jpeg"},
+            {no: 65, name: "錢幣二", en: "Two of Pentacles", theme: "物質財富與工作", upright: "多工處理、收支平衡、應變能力、彈性調度", reversed: "財務失控、蠟燭兩頭燒、壓力過大、分心", file: "RWS1909_-_Pentacles_02.jpeg"},
+            {no: 66, name: "錢幣三", en: "Three of Pentacles", theme: "物質財富與工作", upright: "團隊合作、專業技能、工藝認可、工作成果", reversed: "缺乏溝通、專業不足、團隊不合、品質低落", file: "RWS1909_-_Pentacles_03.jpeg"},
+            {no: 67, name: "錢幣四", en: "Four of Pentacles", theme: "物質財富與工作", upright: "守財奴、吝嗇、控制欲、抗拒改變、穩固", reversed: "財務解凍、慷慨大方、破財、學會放手", file: "RWS1909_-_Pentacles_04.jpeg"},
+            {no: 68, name: "錢幣五", en: "Five of Pentacles", theme: "物質財富與工作", upright: "經濟困窘、失業、雪上加霜、心靈貧乏", reversed: "度過難關、獲得援助、看見生機、財務改善", file: "RWS1909_-_Pentacles_05.jpeg"},
+            {no: 69, name: "錢幣六", en: "Six of Pentacles", theme: "物質財富與工作", upright: "施比受更有福、財務援助、慷慨、公平交易", reversed: "債務糾紛、吝嗇、權力不對等的施捨、剝削", file: "RWS1909_-_Pentacles_06.jpeg"},
+            {no: 70, name: "錢幣七", en: "Seven of Pentacles", theme: "物質財富與工作", upright: "耐心耕耘、檢視收成、長遠投資、等待成果", reversed: "付出與回報不成正比、急功近利、投資打水漂", file: "RWS1909_-_Pentacles_07.jpeg"},
+            {no: 71, name: "錢幣八", en: "Eight of Pentacles", theme: "物質財富與工作", upright: "專注本業、精益求精、匠人精神、默默努力", reversed: "敷衍了事、缺乏技術、無聊乏味、粗製濫造", file: "RWS1909_-_Pentacles_08.jpeg"},
+            {no: 72, name: "錢幣九", en: "Nine of Pentacles", theme: "物質財富與工作", upright: "財務獨立、享受奢華、豐收成果、自信優雅", reversed: "財務依賴、過度揮霍、孤獨清高、面子工程", file: "RWS1909_-_Pentacles_09.jpeg"},
+            {no: 73, name: "錢幣十", en: "Ten of Pentacles", theme: "物質財富與工作", upright: "家族傳承、資產豐厚、事業有成、富裕安康", reversed: "家族財務糾紛、家道中落、破產、傳承斷代", file: "RWS1909_-_Pentacles_10.jpeg"},
+            {no: 74, name: "錢幣侍者", en: "Page of Pentacles", theme: "物質財富與工作", upright: "實用主義、學習新技能、穩健起步、好消息", reversed: "學習怠惰、不切實際、金錢觀偏差、怠慢", file: "RWS1909_-_Pentacles_11.jpeg"},
+            {no: 75, name: "錢幣騎士", en: "Knight of Pentacles", theme: "物質財富與工作", upright: "腳踏實地、責任感、按部就班、務實穩健", reversed: "過度保守、固執不知變通、停滯不前、效率低", file: "RWS1909_-_Pentacles_12.jpeg"},
+            {no: 76, name: "錢幣王后", en: "Queen of Pentacles", theme: "物質財富與工作", upright: "持家有道、滋養大地、富裕慈愛、實務能力", reversed: "過度物質化、疏於精神照顧、貪婪、焦慮", file: "RWS1909_-_Pentacles_13.jpeg"},
+            {no: 77, name: "錢幣國王", en: "King of Pentacles", theme: "物質財富與工作", upright: "商業巨頭、財富自由、穩重可靠、事業頂峰", reversed: "貪婪拜金、守財奴、固執、經營不善、短視", file: "RWS1909_-_Pentacles_14.jpeg"}
         ];
 
         const LENORMAND_DECK = [
@@ -795,7 +883,7 @@
         }
 
         function getRandomTarot(count) {
-            let shuffled = shuffle(MAJOR_ARCANA);
+            let shuffled = shuffle(TAROT_DECK);
             let result = [];
             for(let i=0; i<count; i++) {
                 let card = {...shuffled[i]};
@@ -891,32 +979,36 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
-        function createMiniCardHtml(card, titleText) {
-            let base = getBasePath();
-            let imgPath = base + "rws1909/" + card.file;
-            let revClass = card.isReversed ? "reversed-mini" : "";
-            return `
-                <div class="mini-card">
-                    <div class="mini-title">${titleText}</div>
-                    <img src="${imgPath}" class="mini-img ${revClass}" onerror="this.style.display='none'">
-                    <div class="mini-name">${card.name}</div>
-                </div>
-            `;
-        }
-
-        // 截圖並下載或彈出預覽
+        // 截圖功能：動態加入全版面密集斜向交錯浮水印，適用於所有牌陣（含單張）
         function captureSpread() {
             let target = document.getElementById("spreadArea");
             let btnGroup = document.querySelector(".action-btn-group");
             if(btnGroup) btnGroup.style.display = "none";
 
+            let totalHeight = Math.max(target.scrollHeight, 500);
+            let watermarkContainer = document.createElement("div");
+            watermarkContainer.className = "screenshot-watermark-container";
+            watermarkContainer.style.height = totalHeight + "px";
+
+            let count = Math.ceil(totalHeight / 100) * 3;
+            for(let i = 0; i < count; i++) {
+                let item = document.createElement("div");
+                item.className = "watermark-item";
+                item.textContent = "🍸 醉酒塔羅 - 李特 @tarot.drunk";
+                watermarkContainer.appendChild(item);
+            }
+            target.appendChild(watermarkContainer);
+
             html2canvas(target, {
                 backgroundColor: "#0d0f14",
                 scale: window.innerWidth < 768 ? 2.5 : 2, 
                 useCORS: true,
-                logging: false
+                logging: false,
+                windowHeight: totalHeight
             }).then(canvas => {
+                target.removeChild(watermarkContainer);
                 if(btnGroup) btnGroup.style.display = "flex";
+
                 let dataUrl = canvas.toDataURL("image/png");
                 let isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
                 
@@ -925,15 +1017,43 @@
                     document.getElementById("screenshotModal").style.display = "flex";
                 } else {
                     let link = document.createElement("a");
-                    link.download = "醉酒塔羅-雷諾曼占卜結果.png";
+                    link.download = "醉酒塔羅-占卜結果.png";
                     link.href = dataUrl;
                     link.click();
                 }
             }).catch(err => {
+                if(watermarkContainer.parentNode) target.removeChild(watermarkContainer);
                 if(btnGroup) btnGroup.style.display = "flex";
                 console.error("截圖失敗", err);
                 alert("截圖產生失敗，請稍後再試");
             });
+        }
+
+        function resetToHome() {
+            let container = document.getElementById("spreadArea");
+            container.classList.remove("is-wide");
+            container.innerHTML = `
+                <div class="welcome-box">
+                    <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
+                    <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
+                    <div class="welcome-instructions">
+                        <div class="welcome-instructions-title">使用方式：</div>
+                        <div>1. 深呼吸三次，讓情緒平穩</div>
+                        <div>2. 閉上眼，在心中想好問題</div>
+                        <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「抽牌」</div>
+                    </div>
+                </div>
+            `;
+            document.querySelector(".workspace").scrollTop = 0;
+        }
+
+        function executeDraw() {
+            let spreadVal = document.getElementById("spreadSelect").value;
+            if (spreadVal === "diary") drawDailyDiary();
+            else if (spreadVal === "two") drawTwoChoices();
+            else if (spreadVal === "triangle") drawHolyTriangle();
+            else if (spreadVal === "celtic5") drawCeltic5();
+            else if (spreadVal === "free") drawFreeSpread();
         }
 
         function drawDailyDiary() {
@@ -967,16 +1087,6 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
             
-            /* 手機版專屬牌面總覽：二擇一幾何排版 */
-            html += '<div class="mobile-preview-section">';
-            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
-            html += '<div class="two-choices-visual-mobile">';
-            html += '<div class="two-choices-top-mobile">' + createMiniCardHtml(tCards[0], "1.現狀") + '</div>';
-            html += '<div class="two-choices-branches-mobile">';
-            html += '<div class="two-choices-col-mobile">' + createMiniCardHtml(tCards[1], "2.A過程") + createMiniCardHtml(tCards[2], "3.A結果") + '</div>';
-            html += '<div class="two-choices-col-mobile">' + createMiniCardHtml(tCards[3], "4.B過程") + createMiniCardHtml(tCards[4], "5.B結果") + '</div>';
-            html += '</div></div></div>';
-
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
@@ -1014,24 +1124,12 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 🔺 聖 三 角 牌 陣 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
-            /* 手機版專屬牌面總覽：聖三角幾何排版 */
-            html += '<div class="mobile-preview-section">';
-            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
-            html += '<div class="triangle-visual-mobile">';
-            html += createMiniCardHtml(tCards[0], "1.過去");
-            html += '<div class="triangle-row-bottom-mobile">';
-            html += createMiniCardHtml(tCards[1], "2.現在");
-            html += createMiniCardHtml(tCards[2], "3.未來");
-            html += '</div></div></div>';
-
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             
-            // 第一行：過去起因置頂
             html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
             html += '</div>';
 
-            // 第二行：現在焦點與未來趨勢並排
             html += '<div class="branch-row" style="width:100%; max-width:900px;">';
             html += '<div class="branch-col">';
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
@@ -1068,25 +1166,12 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
-            /* 手機版專屬牌面總覽：十字法幾何排版（網格十字陣型） */
-            html += '<div class="mobile-preview-section">';
-            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
-            html += '<div class="celtic-cross-visual-mobile">';
-            html += `<div class="celtic-m-pos-3">${createMiniCardHtml(tCards[3], "4.理想")}</div>`;
-            html += `<div class="celtic-m-pos-1">${createMiniCardHtml(tCards[1], "2.過去")}</div>`;
-            html += `<div class="celtic-m-pos-0">${createMiniCardHtml(tCards[0], "1.現狀")}</div>`;
-            html += `<div class="celtic-m-pos-2">${createMiniCardHtml(tCards[2], "3.未來")}</div>`;
-            html += `<div class="celtic-m-pos-4">${createMiniCardHtml(tCards[4], "5.根源")}</div>`;
-            html += '</div></div>';
-
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
 
-            // 上方：理想目標 (第4張) 置頂
             html += '<div style="width:100%; max-width:395px; margin-bottom:4px;">';
             html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
             html += '</div>';
 
-            // 中間層：左邊過去影響 (第2張)、中間現狀核心 (第1張)、右邊未來走向 (第3張) 並排
             html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
             html += '<div class="branch-col" style="min-width: 395px;">';
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
@@ -1101,13 +1186,12 @@
             html += '</div>';
             html += '</div>';
 
-            // 下方：根源阻礙 (第5張) 置底
             html += '<div style="width:100%; max-width:395px; margin-top:4px;">';
             html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
             html += '</div>';
 
             html += '<div class="action-btn-group">';
-            html += '<button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖</button>';
+            html += '<button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖與浮水印</button>';
             html += '<button class="action-btn secondary" onclick="resetToHome()">🔄 重新抽牌</button>';
             html += '</div>';
             html += '</div>';
