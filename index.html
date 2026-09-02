@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>醉酒塔羅 - 雷諾曼占卜系統</title>
-    <!-- 網頁分頁圖標 (Favicon) 設定 -->
     <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
 
-    <!-- 社群分享預覽標籤 -->
     <meta property="og:title" content="醉酒塔羅 - 雷諾曼占卜系統">
     <meta property="og:description" content="偉特塔羅 × 雷諾曼 占卜系統，解析你的迷惘。">
     <meta property="og:image" content="https://tarotdrunktw-png.github.io/tarot_app/tarot_drunk.jpg">
     <meta property="og:url" content="https://tarotdrunktw-png.github.io/tarot_app/">
     <meta property="og:type" content="website">
 
-    <!-- 引入 html2canvas 函式庫供截圖使用 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
@@ -198,7 +195,7 @@
             position: relative;
             overflow: hidden;
             height: auto;
-            padding-bottom: 10px;
+            padding-bottom: 20px;
         }
         .spread-container.is-wide {
             max-width: 1250px;
@@ -453,7 +450,7 @@
             gap: 10px;
             width: 100%;
             max-width: 450px;
-            margin: 10px auto 20px auto;
+            margin: 15px auto 10px auto;
             justify-content: center;
             z-index: 100;
         }
@@ -486,7 +483,7 @@
             transform: translateY(-2px);
         }
 
-        /* 密集交錯斜向浮水印網格層 (適用於所有牌陣與單張) */
+        /* 密集交錯斜向浮水印網格層 */
         .screenshot-watermark-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -495,10 +492,10 @@
             overflow: hidden;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: 150px; /* 緊密交錯間距 */
+            grid-auto-rows: 150px;
             align-items: center;
             justify-items: center;
-            opacity: 0.10; /* 極淡化設計，不干擾文字辨識 */
+            opacity: 0.10;
         }
         .watermark-item {
             font-size: 15px;
@@ -654,7 +651,6 @@
         </div>
     </div>
 
-    <!-- 手機長按儲存截圖彈窗 (提示固定在圖片上方) -->
     <div id="screenshotModal" class="screenshot-modal" onclick="this.style.display='none'">
         <div class="screenshot-tip">👆 請長按下方圖片選擇「加入照片」或「儲存影像」</div>
         <img id="screenshotResultImg" alt="占卜結果截圖" onclick="event.stopPropagation()">
@@ -749,17 +745,18 @@
             else if (spreadVal === "free") drawFreeSpread();
         }
 
+        // 完整 78 張偉特塔羅牌組
         const TAROT_DECK = [
             {no: 0, name: "愚者", en: "The Fool", theme: "靈性核心與大局走勢", upright: "新的開始、冒險、純真、自發性", reversed: "魯莽、冒險過度、盲目、不負責任", file: "RWS1909_-_00_Fool.jpeg"},
             {no: 1, name: "魔術師", en: "The Magician", theme: "靈性核心與大局走勢", upright: "創造力、技能、資源整合、主動顯化", reversed: "欺瞞、能力未發揮、心懷不軌、受挫", file: "RWS1909_-_01_Magician.jpeg"},
             {no: 2, name: "女祭司", en: "The High Priestess", theme: "靈性核心與大局走勢", upright: "直覺、潛意識、靜止觀察、神秘智慧", reversed: "壓抑情感、秘密洩漏、膚淺、忽視直覺", file: "RWS1909_-_02_High_Priestess.jpeg"},
             {no: 3, name: "皇后", en: "The Empress", theme: "靈性核心與大局走勢", upright: "豐盛、母性孕育、感官享受、自然創造", reversed: "過度保護、創造力停滯、依賴、浪費", file: "RWS1909_-_03_Empress.jpeg"},
-            {no: 4, name: "皇帝", en: "The Emperor", theme: "靈性核心與大局走勢", upright: "權威、結構秩序, 領導力、穩定控制", reversed: "專制暴政、缺乏紀律、固執僵化、失控", file: "RWS1909_-_04_Emperor.jpeg"},
+            {no: 4, name: "皇帝", en: "The Emperor", theme: "靈性核心與大局走勢", upright: "權威、結構秩序、領導力、穩定控制", reversed: "專制暴政、缺乏紀律、固執僵化、失控", file: "RWS1909_-_04_Emperor.jpeg"},
             {no: 5, name: "教皇", en: "The Hierophant", theme: "靈性核心與大局走勢", upright: "傳統體制、精神導師、道德信念、尋求共識", reversed: "盲從體制、反叛叛逆、教條主義、虛偽", file: "RWS1909_-_05_Hierophant.jpeg"},
             {no: 6, name: "戀人", en: "The Lovers", theme: "靈性核心與大局走勢", upright: "愛與結合、價值觀抉擇、人際和諧", reversed: "關係裂痕、價值觀衝突、錯誤決定、誘惑", file: "RWS1909_-_06_Lovers.jpeg"},
             {no: 7, name: "戰車", en: "The Chariot", theme: "靈性核心與大局走勢", upright: "意志力、克服障礙、掌控方向、決心前進", reversed: "失控暴衝、方向迷失、挫敗、攻擊性過強", file: "RWS1909_-_07_Chariot.jpeg"},
             {no: 8, name: "力量", en: "The Strength", theme: "靈性核心與大局走勢", upright: "內在勇氣、耐心包容、以柔克剛、自信", reversed: "自我懷疑、軟弱無力、情緒失控、暴力", file: "RWS1909_-_08_Strength.jpeg"},
-            {no: 9, name: "隱士", en: "The Hermit", theme: "靈性核心與大局走勢", upright: "內省探索、獨處沉澱/尋求真理、心靈指引", reversed: "孤立疏離、逃避現實、偏執盲目、寂寞", file: "RWS1909_-_09_Hermit.jpeg"},
+            {no: 9, name: "隱士", en: "The Hermit", theme: "靈性核心與大局走勢", upright: "內省探索、獨處沉澱、尋求真理、心靈指引", reversed: "孤立疏離、逃避現實、偏執盲目、寂寞", file: "RWS1909_-_09_Hermit.jpeg"},
             {no: 10, name: "命運之輪", en: "Wheel of Fortune", theme: "靈性核心與大局走勢", upright: "命運轉折、週期循環、幸運契機、不可抗力", reversed: "厄運連連、抗拒改變、週期停滯、意外挫折", file: "RWS1909_-_10_Wheel_of_Fortune.jpeg"},
             {no: 11, name: "正義", en: "Justice", theme: "靈性核心與大局走勢", upright: "公平正義、因果法則、客觀真相、明智裁決", reversed: "不公不義、偏見偏袒、逃避責任、法律糾紛", file: "RWS1909_-_11_Justice.jpeg"},
             {no: 12, name: "倒吊人", en: "The Hanged Man", theme: "靈性核心與大局走勢", upright: "換位思考、暫停放下、自我犧牲、獲得新視角", reversed: "無謂犧牲、停滯不前、抗拒放手、自怨自艾", file: "RWS1909_-_12_Hanged_Man.jpeg"},
@@ -768,7 +765,7 @@
             {no: 15, name: "惡魔", en: "The Devil", theme: "靈性核心與大局走勢", upright: "物質束縛、執念誘惑、成癮依賴、陰暗面", reversed: "擺脫枷鎖、重獲自由、覺醒突破、認清陷阱", file: "RWS1909_-_15_Devil.jpeg"},
             {no: 16, name: "高塔", en: "The Tower", theme: "靈性核心與大局走勢", upright: "突發劇變、體系崩塌、幻象破滅、震撼啟蒙", reversed: "恐懼改變、避免災難、勉強支撐、餘震未平", file: "RWS1909_-_16_Tower.jpeg"},
             {no: 17, name: "星星", en: "The Star", theme: "靈性核心與大局走勢", upright: "希望指引、靈感湧現、寧靜信心、心靈療癒", reversed: "絕望灰心、失去信念、悲觀消極、靈感枯竭", file: "RWS1909_-_17_Star.jpeg"},
-            {no: 18, name: "月亮", en: "The Moon", theme: "靈性核心與大局走勢", upright: "潛在恐懼、幻象焦慮/直覺波動、模糊不明", reversed: "迷霧消散、看清真相、釋放恐懼、情緒平復", file: "RWS1909_-_18_Moon.jpeg"},
+            {no: 18, name: "月亮", en: "The Moon", theme: "靈性核心與大局走勢", upright: "潛在恐懼、幻象焦慮、直覺波動、模糊不明", reversed: "迷霧消散、看清真相、釋放恐懼、情緒平復", file: "RWS1909_-_18_Moon.jpeg"},
             {no: 19, name: "太陽", en: "The Sun", theme: "靈性核心與大局走勢", upright: "成功喜悅、活力充沛、真理顯明、自信光明", reversed: "暫時低落、過度樂觀、虛榮自滿、延遲成功", file: "RWS1909_-_19_Sun.jpeg"},
             {no: 20, name: "審判", en: "The Judgement", theme: "靈性核心與大局走勢", upright: "生命召喚、重大覺醒、清算重獲新生、明智抉擇", reversed: "自我懷疑、逃避召喚、重複犯錯、悔恨內疚", file: "RWS1909_-_20_Judgement.jpeg"},
             {no: 21, name: "世界", en: "The World", theme: "靈性核心與大局走勢", upright: "圓滿達成、階段完成、完整合一、展翅高飛", reversed: "未竟之志、延宕拖延、缺乏收尾、受限束縛", file: "RWS1909_-_21_World.jpeg"},
@@ -844,7 +841,7 @@
             {no: 7, name: "蛇", en: "Snake", file: "snake.avif", suit: "Q♣", polarity: "負面", theme: "複雜與心機", keywords: ["轉彎抹角", "嫉妒心", "潛在威脅"]},
             {no: 8, name: "棺材", en: "Coffin", file: "coffin.avif", suit: "9♦", polarity: "負面", theme: "結束與病痛", keywords: ["重大轉折", "停止", "耗損"]},
             {no: 9, name: "花束", en: "Bouquet", file: "bouquet.avif", suit: "Q♠", polarity: "正面", theme: "愉悅與禮物", keywords: ["美好驚喜", "人緣", "祝福"]},
-            {no: 10, name: "鐮刀", en: "Scythe", file: "scythe.avif", suit: "J♦", polarity: "負面", theme: "決定性切割", "意外", "危險"]},
+            {no: 10, name: "鐮刀", en: "Scythe", file: "scythe.avif", suit: "J♦", polarity: "負面", theme: "突發與切斷", keywords: ["決定性切割", "意外", "危險"]},
             {no: 11, name: "鞭子", en: "Whip", file: "whip.avif", suit: "J♣", polarity: "負面", theme: "爭執與重複", keywords: ["摩擦", "爭辯", "重複動作"]},
             {no: 12, name: "鳥", en: "Birds", file: "birds.avif", suit: "7♦", polarity: "中性", theme: "溝通與焦慮", keywords: ["談話", "電話聯繫", "神經質"]},
             {no: 13, name: "小孩", en: "Child", file: "child.avif", suit: "J♠", polarity: "正面", theme: "新開始與純真", keywords: ["小巧的事物", "新計畫", "單純"]},
@@ -992,13 +989,13 @@
             `;
         }
 
-        // 截圖功能：動態加入全版面密集斜向交錯浮水印（涵蓋所有牌陣與單張，並自動延伸到底部）
+        // 截圖功能：動態加入全版面密集斜向交錯浮水印，適用於所有牌陣（含單張）
         function captureSpread() {
             let target = document.getElementById("spreadArea");
             let btnGroup = document.querySelector(".action-btn-group");
             if(btnGroup) btnGroup.style.display = "none";
 
-            let totalHeight = Math.max(target.scrollHeight, 500);
+            let totalHeight = Math.max(target.scrollHeight, 400);
             let watermarkContainer = document.createElement("div");
             watermarkContainer.className = "screenshot-watermark-container";
             watermarkContainer.style.height = totalHeight + "px";
