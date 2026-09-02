@@ -216,21 +216,21 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .welcome-title {
-            font-size: 14.8px;
+            font-size: 15.6px;
             font-weight: bold;
             line-height: 1.8;
             margin-bottom: 15px;
             color: #f8fafc;
         }
         .welcome-subtitle {
-            font-size: 14.8px;
+            font-size: 15.6px;
             font-weight: bold;
             line-height: 1.8;
             margin-bottom: 24px;
             color: #f8fafc;
         }
         .welcome-instructions {
-            font-size: 14.2px;
+            font-size: 14.8px;
             line-height: 2.2;
             color: #cbd5e1;
             margin-top: 12px;
@@ -453,7 +453,7 @@
             gap: 10px;
             width: 100%;
             max-width: 450px;
-            margin: 10px auto 10px auto;
+            margin: 10px auto 20px auto;
             justify-content: center;
             z-index: 100;
         }
@@ -667,7 +667,7 @@
     </div>
 
     <div class="visitor-counter-bar" id="visitorCount">
-        🍸 載入訪客數中...
+        🍸 歡迎來到醉酒塔羅，您是第：資料載入中... 位深夜酒客
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -844,7 +844,7 @@
             {no: 7, name: "蛇", en: "Snake", file: "snake.avif", suit: "Q♣", polarity: "負面", theme: "複雜與心機", keywords: ["轉彎抹角", "嫉妒心", "潛在威脅"]},
             {no: 8, name: "棺材", en: "Coffin", file: "coffin.avif", suit: "9♦", polarity: "負面", theme: "結束與病痛", keywords: ["重大轉折", "停止", "耗損"]},
             {no: 9, name: "花束", en: "Bouquet", file: "bouquet.avif", suit: "Q♠", polarity: "正面", theme: "愉悅與禮物", keywords: ["美好驚喜", "人緣", "祝福"]},
-            {no: 10, name: "鐮刀", en: "Scythe", file: "scythe.avif", suit: "J♦", polarity: "負面", theme: "突發與切斷", keywords: ["決定性切割", "意外", "危險"]},
+            {no: 10, name: "鐮刀", en: "Scythe", file: "scythe.avif", suit: "J♦", polarity: "負面", theme: "決定性切割", "意外", "危險"]},
             {no: 11, name: "鞭子", en: "Whip", file: "whip.avif", suit: "J♣", polarity: "負面", theme: "爭執與重複", keywords: ["摩擦", "爭辯", "重複動作"]},
             {no: 12, name: "鳥", en: "Birds", file: "birds.avif", suit: "7♦", polarity: "中性", theme: "溝通與焦慮", keywords: ["談話", "電話聯繫", "神經質"]},
             {no: 13, name: "小孩", en: "Child", file: "child.avif", suit: "J♠", polarity: "正面", theme: "新開始與純真", keywords: ["小巧的事物", "新計畫", "單純"]},
@@ -979,7 +979,20 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
-        // 截圖功能：動態加入全版面密集斜向交錯浮水印，適用於所有牌陣（含單張）
+        function createMiniCardHtml(card, titleText) {
+            let base = getBasePath();
+            let imgPath = base + "rws1909/" + card.file;
+            let revClass = card.isReversed ? "reversed-mini" : "";
+            return `
+                <div class="mini-card">
+                    <div class="mini-title">${titleText}</div>
+                    <img src="${imgPath}" class="mini-img ${revClass}" onerror="this.style.display='none'">
+                    <div class="mini-name">${card.name}</div>
+                </div>
+            `;
+        }
+
+        // 截圖功能：動態加入全版面密集斜向交錯浮水印（涵蓋所有牌陣與單張，並自動延伸到底部）
         function captureSpread() {
             let target = document.getElementById("spreadArea");
             let btnGroup = document.querySelector(".action-btn-group");
@@ -1087,6 +1100,16 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
             
+            /* 手機版專屬牌面總覽：二擇一幾何排版 */
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
+            html += '<div class="two-choices-visual-mobile">';
+            html += '<div class="two-choices-top-mobile">' + createMiniCardHtml(tCards[0], "1.現狀") + '</div>';
+            html += '<div class="two-choices-branches-mobile">';
+            html += '<div class="two-choices-col-mobile">' + createMiniCardHtml(tCards[1], "2.A過程") + createMiniCardHtml(tCards[2], "3.A結果") + '</div>';
+            html += '<div class="two-choices-col-mobile">' + createMiniCardHtml(tCards[3], "4.B過程") + createMiniCardHtml(tCards[4], "5.B結果") + '</div>';
+            html += '</div></div></div>';
+
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
@@ -1124,12 +1147,24 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 🔺 聖 三 角 牌 陣 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
+            /* 手機版專屬牌面總覽：聖三角幾何排版 */
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
+            html += '<div class="triangle-visual-mobile">';
+            html += createMiniCardHtml(tCards[0], "1.過去");
+            html += '<div class="triangle-row-bottom-mobile">';
+            html += createMiniCardHtml(tCards[1], "2.現在");
+            html += createMiniCardHtml(tCards[2], "3.未來");
+            html += '</div></div></div>';
+
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
             
+            // 第一行：過去起因置頂
             html += '<div style="width:100%; max-width:395px; margin-bottom:12px;">';
             html += createCardBoxHtml(tCards[0], getLenoBatch(lenoPool, extCount), titles[0]);
             html += '</div>';
 
+            // 第二行：現在焦點與未來趨勢並排
             html += '<div class="branch-row" style="width:100%; max-width:900px;">';
             html += '<div class="branch-col">';
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
@@ -1166,12 +1201,25 @@
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
 
+            /* 手機版專屬牌面總覽：十字法幾何排版（網格十字陣型） */
+            html += '<div class="mobile-preview-section">';
+            html += '<div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div>';
+            html += '<div class="celtic-cross-visual-mobile">';
+            html += `<div class="celtic-m-pos-3">${createMiniCardHtml(tCards[3], "4.理想")}</div>`;
+            html += `<div class="celtic-m-pos-1">${createMiniCardHtml(tCards[1], "2.過去")}</div>`;
+            html += `<div class="celtic-m-pos-0">${createMiniCardHtml(tCards[0], "1.現狀")}</div>`;
+            html += `<div class="celtic-m-pos-2">${createMiniCardHtml(tCards[2], "3.未來")}</div>`;
+            html += `<div class="celtic-m-pos-4">${createMiniCardHtml(tCards[4], "5.根源")}</div>`;
+            html += '</div></div>';
+
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
 
+            // 上方：理想目標 (第4張) 置頂
             html += '<div style="width:100%; max-width:395px; margin-bottom:4px;">';
             html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
             html += '</div>';
 
+            // 中間層：左邊過去影響 (第2張)、中間現狀核心 (第1張)、右邊未來走向 (第3張) 並排
             html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
             html += '<div class="branch-col" style="min-width: 395px;">';
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
@@ -1186,12 +1234,13 @@
             html += '</div>';
             html += '</div>';
 
+            // 下方：根源阻礙 (第5張) 置底
             html += '<div style="width:100%; max-width:395px; margin-top:4px;">';
             html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
             html += '</div>';
 
             html += '<div class="action-btn-group">';
-            html += '<button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖與浮水印</button>';
+            html += '<button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖</button>';
             html += '<button class="action-btn secondary" onclick="resetToHome()">🔄 重新抽牌</button>';
             html += '</div>';
             html += '</div>';
