@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>醉酒塔羅 - 雷諾曼占卜系統</title>
-    <!-- 網頁分頁圖標 (Favicon) 設定 -->
     <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
 
-    <!-- 社群分享預覽標籤 -->
     <meta property="og:title" content="醉酒塔羅 - 雷諾曼占卜系統">
     <meta property="og:description" content="偉特塔羅 × 雷諾曼 占卜系統，解析你的迷惘。">
     <meta property="og:image" content="https://tarotdrunktw-png.github.io/tarot_app/tarot_drunk.jpg">
     <meta property="og:url" content="https://tarotdrunktw-png.github.io/tarot_app/">
     <meta property="og:type" content="website">
 
-    <!-- 引入 html2canvas 函式庫供截圖使用 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
@@ -198,9 +195,9 @@
             position: relative;
             overflow: hidden;
             height: auto;
-            padding: 20px; /* 增加容器內邊距，讓截圖四周自動留白 */
-            background-color: #0d0f14; /* 截圖時確保背景乾淨統一 */
-            border-radius: 10px;
+            padding: 24px; /* 上下左右自動留白間距 */
+            background-color: #0d0f14; /* 截圖統一背景色 */
+            border-radius: 12px;
         }
         .spread-container.is-wide {
             max-width: 1250px;
@@ -455,7 +452,7 @@
             gap: 10px;
             width: 100%;
             max-width: 450px;
-            margin: 10px auto 10px auto;
+            margin: 15px auto 5px auto;
             justify-content: center;
             z-index: 100;
         }
@@ -656,7 +653,6 @@
         </div>
     </div>
 
-    <!-- 手機長按儲存截圖彈窗 (提示固定在圖片上方) -->
     <div id="screenshotModal" class="screenshot-modal" onclick="this.style.display='none'">
         <div class="screenshot-tip">👆 請長按下方圖片選擇「加入照片」或「儲存影像」</div>
         <img id="screenshotResultImg" alt="占卜結果截圖" onclick="event.stopPropagation()">
@@ -669,7 +665,7 @@
     </div>
 
     <div class="visitor-counter-bar" id="visitorCount">
-        🍸 載入訪客數中...
+        🍸 歡迎來到醉酒塔羅，您是第：${data.value} 位深夜酒客
     </div>
 
     <div id="lenoModal" class="modal-overlay" onclick="closeModal(event)">
@@ -832,7 +828,7 @@
             {no: 73, name: "錢幣十", en: "Ten of Pentacles", theme: "物質財富與工作", upright: "家族傳承、資產豐厚、事業有成、富裕安康", reversed: "家族財務糾紛、家道中落、破產、傳承斷代", file: "RWS1909_-_Pentacles_10.jpeg"},
             {no: 74, name: "錢幣侍者", en: "Page of Pentacles", theme: "物質財富與工作", upright: "實用主義、學習新技能、穩健起步、好消息", reversed: "學習怠惰、不切實際、金錢觀偏差、怠慢", file: "RWS1909_-_Pentacles_11.jpeg"},
             {no: 75, name: "錢幣騎士", en: "Knight of Pentacles", theme: "物質財富與工作", upright: "腳踏實地、責任感、按部就班、務實穩健", reversed: "過度保守、固執不知變通、停滯不前、效率低", file: "RWS1909_-_Pentacles_12.jpeg"},
-            {no: 76, name: "錢幣王后", en: "Queen of Pentacles", theme: "物質財富與工作", upright: "持家有道、滋養大地、富裕慈愛、實務能力",}^{(\mathrm{reversed: "過度物質化、疏於精神照顧、貪婪、焦慮", file: "RWS1909_-_Pentacles_13.jpeg"},
+            {no: 76, name: "錢幣王后", en: "Queen of Pentacles", theme: "物質財富與工作", upright: "持家有道、滋養大地、富裕慈愛、實務能力", reversed: "過度物質化、疏於精神照顧、貪婪、焦慮", file: "RWS1909_-_Pentacles_13.jpeg"},
             {no: 77, name: "錢幣國王", en: "King of Pentacles", theme: "物質財富與工作", upright: "商業巨頭、財富自由、穩重可靠、事業頂峰", reversed: "貪婪拜金、守財奴、固執、經營不善、短視", file: "RWS1909_-_Pentacles_14.jpeg"}
         ];
 
@@ -981,26 +977,13 @@
             document.getElementById("lenoModal").style.display = "none";
         }
 
-        function createMiniCardHtml(card, titleText) {
-            let base = getBasePath();
-            let imgPath = base + "rws1909/" + card.file;
-            let revClass = card.isReversed ? "reversed-mini" : "";
-            return `
-                <div class="mini-card">
-                    <div class="mini-title">${titleText}</div>
-                    <img src="${imgPath}" class="mini-img ${revClass}" onerror="this.style.display='none'">
-                    <div class="mini-name">${card.name}</div>
-                </div>
-            `;
-        }
-
-        // 截圖功能：動態加入全版面密集斜向交錯浮水印，適用於所有牌陣（含單張）
+        // 截圖功能：動態加入全版面密集斜向交錯浮水印，並確保上下左右有完美的留邊
         function captureSpread() {
             let target = document.getElementById("spreadArea");
             let btnGroup = document.querySelector(".action-btn-group");
             if(btnGroup) btnGroup.style.display = "none";
 
-            let totalHeight = Math.max(target.scrollHeight, 500);
+            let totalHeight = Math.max(target.scrollHeight, 400);
             let watermarkContainer = document.createElement("div");
             watermarkContainer.className = "screenshot-watermark-container";
             watermarkContainer.style.height = totalHeight + "px";
@@ -1042,33 +1025,6 @@
                 console.error("截圖失敗", err);
                 alert("截圖產生失敗，請稍後再試");
             });
-        }
-
-        function resetToHome() {
-            let container = document.getElementById("spreadArea");
-            container.classList.remove("is-wide");
-            container.innerHTML = `
-                <div class="welcome-box">
-                    <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
-                    <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
-                    <div class="welcome-instructions">
-                        <div class="welcome-instructions-title">使用方式：</div>
-                        <div>1. 深呼吸三次，讓情緒平穩</div>
-                        <div>2. 閉上眼，在心中想好問題</div>
-                        <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「抽牌」</div>
-                    </div>
-                </div>
-            `;
-            document.querySelector(".workspace").scrollTop = 0;
-        }
-
-        function executeDraw() {
-            let spreadVal = document.getElementById("spreadSelect").value;
-            if (spreadVal === "diary") drawDailyDiary();
-            else if (spreadVal === "two") drawTwoChoices();
-            else if (spreadVal === "triangle") drawHolyTriangle();
-            else if (spreadVal === "celtic5") drawCeltic5();
-            else if (spreadVal === "free") drawFreeSpread();
         }
 
         function drawDailyDiary() {
@@ -1172,10 +1128,10 @@
 
             let titles = [
                 "【第一張·現狀核心】",
-                "【第二張·過去影響】",
-                "【第三張·未來走向】",
-                "【第四張·理想目標】",
-                "【第五張·根源阻礙】"
+                "【第二張·阻礙挑戰】",
+                "【第三張·過去根基】",
+                "【第四張·未來走向】",
+                "【第五張·最終結果】"
             ];
 
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ✝️ 十 字 法 牌 陣 (五張) 】</h2>';
@@ -1183,10 +1139,12 @@
 
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
 
+            // 過去根基 (第3張) 置頂
             html += '<div style="width:100%; max-width:395px; margin-bottom:4px;">';
-            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
+            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
             html += '</div>';
 
+            // 中間層：左邊阻礙 (第2張)、中間現狀 (第1張)、右邊未來 (第4張) 並排
             html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
             html += '<div class="branch-col" style="min-width: 395px;">';
             html += createCardBoxHtml(tCards[1], getLenoBatch(lenoPool, extCount), titles[1]);
@@ -1197,10 +1155,11 @@
             html += '</div>';
 
             html += '<div class="branch-col" style="min-width: 395px;">';
-            html += createCardBoxHtml(tCards[2], getLenoBatch(lenoPool, extCount), titles[2]);
+            html += createCardBoxHtml(tCards[3], getLenoBatch(lenoPool, extCount), titles[3]);
             html += '</div>';
             html += '</div>';
 
+            // 最終結果 (第5張) 置底
             html += '<div style="width:100%; max-width:395px; margin-top:4px;">';
             html += createCardBoxHtml(tCards[4], getLenoBatch(lenoPool, extCount), titles[4]);
             html += '</div>';
@@ -1238,7 +1197,7 @@
             html += '<button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖</button>';
             html += '<button class="action-btn secondary" onclick="resetToHome()">🔄 重新抽牌</button>';
             html += '</div>';
-            html +='</div>';
+            html += '</div>';
 
             container.innerHTML = html;
         }
