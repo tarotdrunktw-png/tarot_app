@@ -198,7 +198,9 @@
             position: relative;
             overflow: hidden;
             height: auto;
-            padding-bottom: 10px;
+            padding: 20px; /* 增加容器內邊距，讓截圖四周自動留白 */
+            background-color: #0d0f14; /* 截圖時確保背景乾淨統一 */
+            border-radius: 10px;
         }
         .spread-container.is-wide {
             max-width: 1250px;
@@ -486,7 +488,7 @@
             transform: translateY(-2px);
         }
 
-        /* 密集交錯斜向浮水印網格層 (適用於所有牌陣與單張) */
+        /* 密集交錯斜向浮水印網格層 */
         .screenshot-watermark-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -495,10 +497,10 @@
             overflow: hidden;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: 150px; /* 緊密交錯間距 */
+            grid-auto-rows: 150px;
             align-items: center;
             justify-items: center;
-            opacity: 0.10; /* 極淡化設計，不干擾文字辨識 */
+            opacity: 0.10;
         }
         .watermark-item {
             font-size: 15px;
@@ -830,7 +832,7 @@
             {no: 73, name: "錢幣十", en: "Ten of Pentacles", theme: "物質財富與工作", upright: "家族傳承、資產豐厚、事業有成、富裕安康", reversed: "家族財務糾紛、家道中落、破產、傳承斷代", file: "RWS1909_-_Pentacles_10.jpeg"},
             {no: 74, name: "錢幣侍者", en: "Page of Pentacles", theme: "物質財富與工作", upright: "實用主義、學習新技能、穩健起步、好消息", reversed: "學習怠惰、不切實際、金錢觀偏差、怠慢", file: "RWS1909_-_Pentacles_11.jpeg"},
             {no: 75, name: "錢幣騎士", en: "Knight of Pentacles", theme: "物質財富與工作", upright: "腳踏實地、責任感、按部就班、務實穩健", reversed: "過度保守、固執不知變通、停滯不前、效率低", file: "RWS1909_-_Pentacles_12.jpeg"},
-            {no: 76, name: "錢幣王后", en: "Queen of Pentacles", theme: "物質財富與工作", upright: "持家有道、滋養大地、富裕慈愛、實務能力", reversed: "過度物質化、疏於精神照顧、貪婪、焦慮", file: "RWS1909_-_Pentacles_13.jpeg"},
+            {no: 76, name: "錢幣王后", en: "Queen of Pentacles", theme: "物質財富與工作", upright: "持家有道、滋養大地、富裕慈愛、實務能力",}^{(\mathrm{reversed: "過度物質化、疏於精神照顧、貪婪、焦慮", file: "RWS1909_-_Pentacles_13.jpeg"},
             {no: 77, name: "錢幣國王", en: "King of Pentacles", theme: "物質財富與工作", upright: "商業巨頭、財富自由、穩重可靠、事業頂峰", reversed: "貪婪拜金、守財奴、固執、經營不善、短視", file: "RWS1909_-_Pentacles_14.jpeg"}
         ];
 
@@ -977,6 +979,19 @@
 
         function closeModal(e) {
             document.getElementById("lenoModal").style.display = "none";
+        }
+
+        function createMiniCardHtml(card, titleText) {
+            let base = getBasePath();
+            let imgPath = base + "rws1909/" + card.file;
+            let revClass = card.isReversed ? "reversed-mini" : "";
+            return `
+                <div class="mini-card">
+                    <div class="mini-title">${titleText}</div>
+                    <img src="${imgPath}" class="mini-img ${revClass}" onerror="this.style.display='none'">
+                    <div class="mini-name">${card.name}</div>
+                </div>
+            `;
         }
 
         // 截圖功能：動態加入全版面密集斜向交錯浮水印，適用於所有牌陣（含單張）
@@ -1191,7 +1206,7 @@
             html += '</div>';
 
             html += '<div class="action-btn-group">';
-            html += '<button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖與浮水印</button>';
+            html += '<button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖</button>';
             html += '<button class="action-btn secondary" onclick="resetToHome()">🔄 重新抽牌</button>';
             html += '</div>';
             html += '</div>';
@@ -1223,7 +1238,7 @@
             html += '<button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖</button>';
             html += '<button class="action-btn secondary" onclick="resetToHome()">🔄 重新抽牌</button>';
             html += '</div>';
-            html += '</div>';
+            html +='</div>';
 
             container.innerHTML = html;
         }
