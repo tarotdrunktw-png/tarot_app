@@ -2,7 +2,6 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- ⚠️ 加入 maximum-scale=1.0 與 user-scalable=no，防止手機點擊輸入框時自動拉近放大 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>醉酒塔羅 - 偉特塔羅 x 雷諾曼占卜</title>
     <link rel="icon" type="image/jpeg" href="tarot_drunk.jpg">
@@ -14,7 +13,6 @@
     <meta property="og:type" content="website">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- ⚠️ 引入加解密函式庫 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
     <style>
@@ -47,7 +45,7 @@
             color: var(--text-main);
             overflow: hidden;
             position: relative;
-            touch-action: manipulation; /* ⚠️ 防止 iOS 雙擊放大 */
+            touch-action: manipulation;
         }
 
         body::before {
@@ -230,7 +228,6 @@
         .welcome-instructions { font-size: 14.8px; line-height: 2.2; color: #cbd5e1; margin-top: 12px; text-align: left; display: inline-block; }
         .welcome-instructions-title { font-weight: bold; margin-bottom: 11.5px; font-size: 12px; color: #38bdf8; text-align: center; }
 
-        /* ⚠️ 認證系統與表單樣式 */
         .auth-card {
             background: rgba(21, 24, 33, 0.95);
             border: 1px solid #333a4f;
@@ -246,20 +243,12 @@
         .auth-header { font-size: 16px; font-weight: bold; color: #38bdf8; text-align: center; margin-bottom: 4px; }
         .auth-field { display: flex; flex-direction: column; gap: 5px; text-align: left; }
         .auth-field label { font-size: 12px; color: #cbd5e1; font-weight: bold; }
-        .auth-field input { 
-            background: #0d0f14; 
-            border: 1px solid #475569; 
-            border-radius: 6px; 
-            padding: 10px; 
-            color: #fff; 
-            font-size: 16px; /* ⚠️ 關鍵：字體大小設定 16px，手機點擊才不會強制拉近放大 */
-        }
+        .auth-field input { background: #0d0f14; border: 1px solid #475569; border-radius: 6px; padding: 10px; color: #fff; font-size: 16px; }
         .auth-field input:focus { border-color: #38bdf8; outline: none; }
         .auth-btn-group { display: flex; gap: 10px; margin-top: 10px; }
         .auth-switch-text { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 8px; display: flex; justify-content: space-between; }
         .auth-switch-text span { color: #38bdf8; cursor: pointer; font-weight: bold; text-decoration: underline; }
 
-        /* 雲端歷史紀錄樣式 */
         .history-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 16px; flex-direction: column; gap: 10px; }
         .history-content { background: #1a1c24; width: 100%; max-width: 500px; max-height: 80vh; border-radius: 8px; border: 1px solid #333a4f; display: flex; flex-direction: column; overflow: hidden; padding: 16px; }
         .history-header { font-size: 16px; font-weight: bold; color: #38bdf8; margin-bottom: 12px; text-align: center; }
@@ -267,7 +256,6 @@
         .history-item { background: #232736; border: 1px solid #2f364b; padding: 10px; border-radius: 6px; font-size: 12px; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
         .history-item:hover { background: #333b52; }
 
-        /* 塔羅詳細卡片樣式：寬度 395px、高度 238px */
         .card-box {
             width: 100%;
             max-width: 395px;
@@ -316,7 +304,6 @@
         .branch-col { display: flex; flex-direction: column; gap: 12px; align-items: center; flex: 1; min-width: 395px; }
         .branch-title { font-size: 15px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; text-align: center; }
 
-        /* 手機版牌陣縮圖專屬排版樣式 */
         .mobile-preview-section { display: none; width: 100%; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 4px; }
         @media (max-width: 768px) { .mobile-preview-section { display: flex; } }
 
@@ -468,7 +455,7 @@
     </div>
 
     <script>
-        // ⚠️ 請確認此為您塔羅系統使用的 GAS 網址 (與上一版相同)
+        // ⚠️ 請確認此為您塔羅系統使用的 GAS 網址
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwnLAGNlM-eZdb0LoCu7kd1HIoorzJfh8EM1OSX3vfQF_VWBk8AlF625fxH9EmBqPuuSg/exec";
 
         let customCount = 3;
@@ -597,7 +584,7 @@
                     <div class="auth-header">🔮 帳號註冊</div>
                     <div class="auth-field"><label>使用者名稱：</label><input type="text" id="regUsername" placeholder="請輸入您的暱稱或名稱"></div>
                     <div class="auth-field"><label>註冊信箱：</label><input type="email" id="regEmail" placeholder="example@gmail.com"></div>
-                    <div class="auth-field"><label>設定密碼：</label><input type="password" id="regPassword" placeholder="請輸入密碼"></div>
+                    <div class="auth-field"><label>設定密碼：</label><input type="password" id="regPassword" placeholder="請輸入密碼（顯示為星號）"></div>
                     <div class="auth-field"><label>確認密碼：</label><input type="password" id="regConfirmPassword" placeholder="請再次輸入密碼"></div>
                     <div class="auth-btn-group"><button class="action-btn" onclick="submitRegister()">註冊並同步</button><button class="action-btn secondary" onclick="showLoginPage()">返回登入</button></div>
                     <div class="auth-switch-text"><span onclick="showLoginPage()">已經有帳號？點此登入</span></div>
@@ -806,7 +793,7 @@
                 </div>
                 ${item.html}
                 <div class="action-btn-group" style="margin-top: 25px;">
-                    <button class="action-btn" onclick="captureSpread()">📸 儲存占卜截圖</button>
+                    <button class="action-btn" onclick="captureSpreadLocally()">📸 儲存占卜截圖</button>
                     <button class="action-btn secondary" onclick="loadCloudHistory()">📂 回歷史清單</button>
                     <button class="action-btn secondary" onclick="resetToHome()">🏠 回主畫面</button>
                 </div>
@@ -825,6 +812,36 @@
                 freeBox.style.display = "none";
             }
         }
+
+        // ====== 以下補回遺失的兩個關鍵函式 ====== //
+        function resetToHome() {
+            let container = document.getElementById("spreadArea");
+            container.classList.remove("is-wide");
+            container.innerHTML = `
+                <div class="welcome-box">
+                    <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
+                    <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
+                    <div class="welcome-instructions">
+                        <div class="welcome-instructions-title">使用方式：</div>
+                        <div>1. 深呼吸三次，讓情緒平穩</div>
+                        <div>2. 閉上眼，在心中想好問題</div>
+                        <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「抽牌」</div>
+                        <div style="color: #38bdf8; margin-top: 4px;">提醒：若要使用雲端紀錄與載入占卜圖面功能，請點擊右上角進行登入。</div>
+                    </div>
+                </div>
+            `;
+            document.querySelector(".workspace").scrollTop = 0;
+        }
+
+        function executeDraw() {
+            let spreadVal = document.getElementById("spreadSelect").value;
+            if (spreadVal === "diary") drawDailyDiary();
+            else if (spreadVal === "two") drawTwoChoices();
+            else if (spreadVal === "triangle") drawHolyTriangle();
+            else if (spreadVal === "celtic5") drawCeltic5();
+            else if (spreadVal === "free") drawFreeSpread();
+        }
+        // =========================================== //
 
         // ====== 牌陣渲染與占卜邏輯 ====== //
         const TAROT_DECK = [
