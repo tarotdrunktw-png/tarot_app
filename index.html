@@ -108,7 +108,7 @@
             align-items: center;
             padding: 0 10px;
         }
-        
+
         .control-row { 
             display: -webkit-box;
             display: -ms-flexbox;
@@ -125,7 +125,7 @@
             width: 100%;
             max-width: 100%;
         }
-        
+
         button, select {
             background-color: var(--accent);
             color: #fff;
@@ -140,7 +140,7 @@
             white-space: nowrap;
         }
         button:hover { background-color: var(--accent-hover); }
-        
+
         select { 
             background-color: #0d0f14; 
             border: 1px solid #475569; 
@@ -152,7 +152,7 @@
             -ms-flex-negative: 1;
             flex-shrink: 1; 
         }
-        
+
         .config-box { 
             background: rgba(30, 34, 48, 0.8); 
             padding: 2px 6px; 
@@ -279,7 +279,7 @@
         .tarot-frame { background-color: var(--tarot-bg); border: 1px solid #252b3d; border-radius: 4px; padding: 8px; display: flex; flex-direction: column; flex: 1; }
         .t-head { font-size: 12px; font-weight: bold; color: #a5b4fc; margin-bottom: 6px; }
         .t-body { display: flex; gap: 10px; flex: 1; align-items: center; }
-        
+
         .card-img { 
             width: 70px; height: 115px; object-fit: cover; border: 1px solid #000; background: #1e2230; 
             border-radius: 4px; flex-shrink: 0; transition: transform 0.3s ease;
@@ -664,6 +664,74 @@
             else { alert("❌ 驗證失敗：" + (result.message || "驗證碼錯誤或已過期。")); }
         }
 
+        // ====== 畫面還原與抽牌控制 ====== //
+        function resetToHome() {
+            let container = document.getElementById("spreadArea");
+            container.classList.remove("is-wide");
+            container.innerHTML = `
+                <div class="welcome-box">
+                    <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
+                    <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
+                    <div class="welcome-instructions">
+                        <div class="welcome-instructions-title">使用方式：</div>
+                        <div>1. 深呼吸三次，讓情緒平穩</div>
+                        <div>2. 閉上眼，在心中想好問題</div>
+                        <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「抽牌」</div>
+                        <div style="color: #38bdf8; margin-top: 4px;">提醒：若要使用雲端紀錄功能，請點擊右上角登入。</div>
+                    </div>
+                </div>
+            `;
+            document.querySelector(".workspace").scrollTop = 0;
+        }
+
+        function executeDraw() {
+            let spreadVal = document.getElementById("spreadSelect").value;
+            if (spreadVal === "diary") drawDailyDiary();
+            else if (spreadVal === "two") drawTwoChoices();
+            else if (spreadVal === "triangle") drawHolyTriangle();
+            else if (spreadVal === "celtic5") drawCeltic5();
+            else if (spreadVal === "free") drawFreeSpread();
+        }
+
+        function captureSpreadLocally() {
+            let target = document.getElementById("spreadArea");
+            let btnGroup = document.querySelector(".action-btn-group");
+            if(btnGroup) btnGroup.style.display = "none";
+
+            let totalHeight = Math.max(target.scrollHeight, 500);
+            let watermarkContainer = document.createElement("div");
+            watermarkContainer.className = "screenshot-watermark-container";
+            watermarkContainer.style.height = totalHeight + "px";
+
+            let count = Math.ceil(totalHeight / 100) * 3;
+            for(let i = 0; i < count; i++) {
+                let item = document.createElement("div");
+                item.className = "watermark-item";
+                item.textContent = "🍸 醉酒塔羅 - 李特 @tarot.drunk";
+                watermarkContainer.appendChild(item);
+            }
+            target.appendChild(watermarkContainer);
+
+            html2canvas(target, { backgroundColor: "#0d0f14", scale: window.innerWidth < 768 ? 2.5 : 2, useCORS: true, logging: false, windowHeight: totalHeight })
+            .then(canvas => {
+                target.removeChild(watermarkContainer);
+                if(btnGroup) btnGroup.style.display = "flex";
+
+                let dataUrl = canvas.toDataURL("image/png");
+                if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+                    document.getElementById("screenshotResultImg").src = dataUrl;
+                    document.getElementById("screenshotModal").style.display = "flex";
+                } else {
+                    let link = document.createElement("a"); link.download = "醉酒塔羅-占卜結果.png"; link.href = dataUrl; link.click();
+                }
+            }).catch(err => {
+                if(watermarkContainer.parentNode) target.removeChild(watermarkContainer);
+                if(btnGroup) btnGroup.style.display = "flex";
+                console.error("截圖失敗", err);
+                alert("截圖產生失敗，請稍後再試");
+            });
+        }
+
         // ====== 雲端存檔與回顧邏輯 ====== //
         async function saveSpreadToCloud() {
             if (!currentEmail || !currentPassword) {
@@ -813,37 +881,7 @@
             }
         }
 
-        // ====== 以下補回遺失的兩個關鍵函式 ====== //
-        function resetToHome() {
-            let container = document.getElementById("spreadArea");
-            container.classList.remove("is-wide");
-            container.innerHTML = `
-                <div class="welcome-box">
-                    <div class="welcome-title">✨ 歡迎來到 偉特塔羅 × 雷諾曼 占卜系統 ✨</div>
-                    <div class="welcome-subtitle">✨ 請點擊上方選單與按鈕開始進行占卜 ✨</div>
-                    <div class="welcome-instructions">
-                        <div class="welcome-instructions-title">使用方式：</div>
-                        <div>1. 深呼吸三次，讓情緒平穩</div>
-                        <div>2. 閉上眼，在心中想好問題</div>
-                        <div>3. 於上方選單挑選牌陣與雷諾曼張數，按下「抽牌」</div>
-                        <div style="color: #38bdf8; margin-top: 4px;">提醒：若要使用雲端紀錄與載入占卜圖面功能，請點擊右上角進行登入。</div>
-                    </div>
-                </div>
-            `;
-            document.querySelector(".workspace").scrollTop = 0;
-        }
-
-        function executeDraw() {
-            let spreadVal = document.getElementById("spreadSelect").value;
-            if (spreadVal === "diary") drawDailyDiary();
-            else if (spreadVal === "two") drawTwoChoices();
-            else if (spreadVal === "triangle") drawHolyTriangle();
-            else if (spreadVal === "celtic5") drawCeltic5();
-            else if (spreadVal === "free") drawFreeSpread();
-        }
-        // =========================================== //
-
-        // ====== 牌陣渲染與占卜邏輯 ====== //
+        // ====== 牌陣與牌卡設定 ====== //
         const TAROT_DECK = [
             {no: 0, name: "愚者", en: "The Fool", theme: "靈性核心與大局走勢", upright: "新的開始、冒險、純真、自發性", reversed: "魯莽、冒險過度、盲目、不負責任", file: "RWS1909_-_00_Fool.jpeg"},
             {no: 1, name: "魔術師", en: "The Magician", theme: "靈性核心與大局走勢", upright: "創造力、技能、資源整合、主動顯化", reversed: "欺瞞、能力未發揮、心懷不軌、受挫", file: "RWS1909_-_01_Magician.jpeg"},
@@ -1016,7 +1054,7 @@
             let imgPath = base + "rws1909/" + card.file;
             let badgeClass = card.isReversed ? "bg-rev" : "bg-up";
             let imgClass = card.isReversed ? "card-img reversed-img" : "card-img";
-            
+
             let lenoHtml = "";
             if(lenoCards && lenoCards.length > 0) {
                 let lenoDataStr = encodeURIComponent(JSON.stringify(lenoCards));
@@ -1105,7 +1143,7 @@
             let titles = ["【現狀核心】", "【選擇 A · 過程】", "【選擇 A · 結果】", "【選擇 B · 過程】", "【選擇 B · 結果】"];
             let html = '<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 ⚖️ 二 擇 一 抉 擇 牌 陣 】</h2>';
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
-            
+
             html += '<div class="mobile-preview-section"><div style="font-size:12px; color:#38bdf8; font-weight:bold;">── 牌面總覽 ──</div><div class="two-choices-visual-mobile">';
             html += '<div class="two-choices-top-mobile">' + createMiniCardHtml(tCards[0], "1.現狀") + '</div>';
             html += '<div class="two-choices-branches-mobile"><div class="two-choices-col-mobile">' + createMiniCardHtml(tCards[1], "2.A過程") + createMiniCardHtml(tCards[2], "3.A結果") + '</div>';
@@ -1202,7 +1240,7 @@
             let html = `<h2 style="color:#f8fafc; margin-bottom:4px; text-align:center; width:100%;">【 🎲 無 牌 陣（ ${count} 張） 】</h2>`;
             html += '<div style="display:flex; flex-direction:column; gap:16px; width:100%; align-items:center;">';
             html += '<div style="font-size:13px; color:#38bdf8; font-weight:bold; margin-top:6px;">── 詳細牌意與解析 ──</div>';
-            
+
             html += '<div class="branch-row" style="width:100%; max-width:1250px; gap: 16px;">';
             tCards.forEach((card, idx) => {
                 html += '<div class="branch-col" style="min-width: 395px;">' + createCardBoxHtml(card, getLenoBatch(lenoPool, extCount), `第 ${idx+1} 張牌`) + '</div>';
