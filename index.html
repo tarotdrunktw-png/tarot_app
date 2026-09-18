@@ -57,33 +57,41 @@
         }
         .title { font-size: 15px; font-weight: bold; color: #e4e6eb; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
         
-        /* ⚠️ 修正：強制單行不換行，微調內距，允許手機橫向滑動 */
+        /* ⚠️ 修正：強制單行 (nowrap) 並隱藏原生捲軸 */
         .control-row { 
             display: flex; align-items: center; justify-content: center; gap: 6px; 
-            flex-wrap: nowrap; /* 強制不換行 */
+            flex-wrap: nowrap; 
             width: 100%; max-width: 100%; overflow-x: auto; padding-bottom: 2px;
-            -webkit-overflow-scrolling: touch; scrollbar-width: none; /* 隱藏火狐捲軸 */
+            -webkit-overflow-scrolling: touch; scrollbar-width: none; 
         }
-        .control-row::-webkit-scrollbar { display: none; /* 隱藏Chrome/Safari捲軸 */ }
+        .control-row::-webkit-scrollbar { display: none; }
         
         button {
             background-color: var(--accent); color: #000; border: none; padding: 0 12px; font-size: 13px; font-weight: bold;
-            border-radius: 6px; cursor: pointer; transition: background 0.2s; white-space: nowrap; height: 34px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            border-radius: 6px; cursor: pointer; transition: background 0.2s; white-space: nowrap; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         button:hover { background-color: var(--accent-hover); }
         
         select, input.small-input { 
             background-color: #0d0f14; border: 1px solid #475569; color: #fff; padding: 0 6px; font-size: 13px; 
-            height: 34px; border-radius: 4px; flex-shrink: 1; outline: none;
+            height: 32px; border-radius: 4px; flex-shrink: 1; outline: none; max-width: 140px; text-overflow: ellipsis; white-space: nowrap;
         }
 
-        /* 隱藏數字輸入框的原生上下箭頭 */
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
         .config-box { 
             background: rgba(30, 34, 48, 0.8); padding: 0 6px; border-radius: 6px; border: 1px solid #33394d; 
             display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 12px; color: #38bdf8; 
-            white-space: nowrap; flex-shrink: 0; min-height: 34px; cursor: pointer;
+            white-space: nowrap; flex-shrink: 1; min-height: 32px; cursor: pointer;
+        }
+
+        /* 🔥 手機版極致壓縮，保證擠在同一排 */
+        @media (max-width: 430px) {
+            .control-panel { padding: 8px 4px; gap: 6px; }
+            .control-row { gap: 3px; }
+            .config-box { padding: 0 4px; gap: 2px; font-size: 11px; }
+            select, input.small-input { padding: 0 2px; font-size: 12px; max-width: 110px; } /* 限制寬度是防爆版關鍵 */
+            button { padding: 0 8px; font-size: 12px; }
         }
 
         .workspace { flex: 1; padding: 20px 16px 80px 16px; display: flex; justify-content: center; align-items: flex-start; overflow-y: auto; -webkit-overflow-scrolling: touch; width: 100%; background: transparent !important; }
